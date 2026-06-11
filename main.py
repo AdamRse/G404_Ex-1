@@ -5,3 +5,5 @@ print("in : ", "a" in ["a", "b", "c"])
 uneListe = []
 uneListe.append("coucou")
 print(uneListe)
+unTuple = (2, 4, "helo")  # Lecture seule
+print(unTuple[1], unTuple[1:], unTuple[-1])
