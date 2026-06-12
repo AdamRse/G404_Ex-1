@@ -132,6 +132,25 @@ def multiplication(number, number2):
         printSuccess(output)
 
 
+# Comptage de mot
+# -------------------------------
+
+
+def word_count(texte):
+    text_split = re.split(r"[,\s;.)(:?+\[\]!{}=#]+", texte)
+    wordList = []
+    wordCount = 0
+    for word in text_split:
+        if word != "":
+            wordCount += 1
+            wordList.append(word)
+    printSuccess(
+        "Le texte contient " + str(wordCount) + " mot" + ("s" if wordCount > 1 else "")
+    )
+    printSuccess("Liste des mots : ")
+    print(wordList)
+
+
 # SET EXERCICES
 # -------------------------------
 
@@ -161,10 +180,17 @@ def exercice4():
     multiplication(inp, inp2)
 
 
+def exercice5():
+    get_inp("Écrivez un texte : ")
+
+    word_count(inp)
+
+
 # RUN
 # -------------------------------
 
 # exercice1()
 # exercice2()
 # exercice3()
-exercice4()
+# exercice4()
+# exercice5()
