@@ -38,8 +38,6 @@ def printWrong(msg):
 # print("Est-ce qu'le la lettre est une voyelle ?")
 voyelles = ("a", "e", "i", "o", "u", "y", "A", "E", "I", "O", "U", "Y")
 
-# get_inp("Écrire une lettre : ")
-
 
 def is_vovel(lettre, display=True):
     if not re.match("^[a-zA-ZéÉèÈàÀêÊ]$", lettre):
@@ -56,13 +54,8 @@ def is_vovel(lettre, display=True):
         return False
 
 
-# is_vovel(inp)
-
 # Une années bissextile
 # -------------------------------
-
-
-# get_inp("Écrire une année : ")
 
 
 def est_bissextile(anneeChar):
@@ -77,13 +70,8 @@ def est_bissextile(anneeChar):
         printWrong(anneeChar + " n'est PAS bissextile")
 
 
-# est_bissextile(inp)
-
-
 # Est une voyelle
 # -------------------------------
-
-get_inp("Entrez une phrase : ")
 
 
 def count_vovel(txt):
@@ -102,4 +90,27 @@ def count_vovel(txt):
     printSuccess("Il y a " + str(count) + " voyelle" + ("s" if count > 1 else ""))
 
 
-count_vovel(inp)
+def exercice1():
+    get_inp("Écrire une lettre : ")
+
+    is_vovel(inp)
+
+
+def exercice2():
+    get_inp("Entrez une année : ")
+
+    est_bissextile(inp)
+
+
+def exercice3():
+    get_inp("Entrez une phrase : ")
+
+    count_vovel(inp)
+
+
+# RUN
+# -------------------------------
+
+exercice1()
+exercice2()
+exercice3()
