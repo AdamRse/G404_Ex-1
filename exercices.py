@@ -41,14 +41,19 @@ voyelles = ("a", "e", "i", "o", "u", "y", "A", "E", "I", "O", "U", "Y")
 # get_inp("Écrire une lettre : ")
 
 
-def is_vovel(lettre):
+def is_vovel(lettre, display=True):
     if not re.match("^[a-zA-ZéÉèÈàÀêÊ]$", lettre):
-        printError("Erreur, veuillez entrer une lettre.")
+        if display:
+            printError("Erreur, veuillez entrer une lettre.")
         return False
     if lettre in voyelles:
-        printSuccess(lettre + " est une voyelle")
+        if display:
+            printSuccess(lettre + " est une voyelle")
+        return True
     else:
-        printWrong(lettre + " n'est pas une voyelle")
+        if display:
+            printWrong(lettre + " n'est pas une voyelle")
+        return False
 
 
 # is_vovel(inp)
@@ -75,5 +80,26 @@ def est_bissextile(anneeChar):
 # est_bissextile(inp)
 
 
-# Une années bissextile
+# Est une voyelle
 # -------------------------------
+
+get_inp("Entrez une phrase : ")
+
+
+def count_vovel(txt):
+    if txt == "":
+        printError("La phrase envoyée est nulle")
+        return False
+    if len(txt) > 50:
+        printError("La phrase est trop longue")
+        return False
+
+    count = 0
+    for lettre in txt:
+        if is_vovel(lettre, False):
+            count += 1
+
+    printSuccess("Il y a " + str(count) + " voyelle" + ("s" if count > 1 else ""))
+
+
+count_vovel(inp)
