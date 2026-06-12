@@ -11,3 +11,9 @@ print(unTuple[1], unTuple[1:], unTuple[-1])
 
 def ma_fonction():
     print("fonction ma_fonction")
+
+
+try:
+    False
+except:
+    True

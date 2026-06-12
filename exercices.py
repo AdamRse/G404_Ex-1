@@ -1,6 +1,7 @@
 import re
 
 inp = ""
+inp2 = ""
 
 
 class bcolors:
@@ -18,6 +19,11 @@ class bcolors:
 def get_inp(msg):
     global inp
     inp = input(msg)
+
+
+def get_inp2(msg):
+    global inp2
+    inp2 = input(msg)
 
 
 def printError(msg):
@@ -90,6 +96,46 @@ def count_vovel(txt):
     printSuccess("Il y a " + str(count) + " voyelle" + ("s" if count > 1 else ""))
 
 
+# Multiplication range
+# -------------------------------
+def multiplication(number, number2):
+    boxSize = 14
+    if not re.match("^[0-9]+$", number):
+        printError(number + " n'est pas un chiffre >:(")
+        return False
+    if not re.match("^[0-9]+$", number2):
+        printError(number2 + " n'est pas un chiffre >:(")
+        return False
+
+    number = int(number)
+    number2 = int(number2)
+
+    if number < 0 or number > 10:
+        printError(str(number) + " N'est pas entre 1 et 10 >:(")
+        return False
+    if number2 < 0 or number2 > 10:
+        printError(str(number2) + " N'est pas entre 1 et 10 >:(")
+        return False
+
+    print("Carré de multiplication " + str(number) + " par " + str(number2))
+    for first_multi in range(1, number + 1):
+        output = ""
+        for second_mult in range(1, number2 + 1):
+            line = ""
+            result = first_multi * second_mult
+            line += str(first_multi) + " x " + str(second_mult) + " = " + str(result)
+
+            for space in range(0, boxSize - len(line)):
+                line += " "
+            output += line + "|"
+
+        printSuccess(output)
+
+
+# SET EXERCICES
+# -------------------------------
+
+
 def exercice1():
     get_inp("Écrire une lettre : ")
 
@@ -108,9 +154,17 @@ def exercice3():
     count_vovel(inp)
 
 
+def exercice4():
+    get_inp("Entrez la HAUTEUR du carré (entre 1 et 10) : ")
+    get_inp2("Entrez la LARGEUR du carré (entre 1 et 10) : ")
+
+    multiplication(inp, inp2)
+
+
 # RUN
 # -------------------------------
 
-exercice1()
-exercice2()
-exercice3()
+# exercice1()
+# exercice2()
+# exercice3()
+exercice4()
