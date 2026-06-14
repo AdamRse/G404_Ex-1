@@ -1,0 +1,11 @@
+services:
+  g404-ex1:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: g404-ex1
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    command: sh
