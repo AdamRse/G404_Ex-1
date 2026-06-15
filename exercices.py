@@ -158,7 +158,7 @@ def word_list(texte, display=True):
 # Mot le plus long
 # -------------------------------
 
-def longest_word(texte):
+def longest_word(texte:str):
     wordList=word_list(texte, False)
     longestWord=""
     for word in wordList:
@@ -167,10 +167,74 @@ def longest_word(texte):
 
     printSuccess("Le mot le plus long est " + longestWord + " (avec " + str(len(longestWord)) + " lettres)")
 
-def longest_word_sort(texte):
+def longest_word_sort(texte:str):
     wordList=word_list(texte, False)
     longestWord=max(wordList, key=len)
     printSuccess("Le mot le plus long est " + longestWord + " (avec " + str(len(longestWord)) + " lettres)")
+
+
+# Supprimer les doublons
+# -------------------------------
+
+def duplicate_del_browse(liste:list, display=True):
+    if not liste:
+        printError("La liste données est vide.")
+        return False
+    if display:
+        print("Liste à trier : ", liste)
+    liste_triee=[]
+
+    for i in liste:
+        if i not in liste_triee:
+            if isinstance(i, list):
+                i=duplicate_del_browse(i, False)
+            liste_triee.append(i)
+        elif display:
+            printWrong(str(i) + " est un doublon")
+
+    if display:
+        printSuccess("La liste a été triée par boucles, les doublons ont été supprimés !")
+        print(liste_triee)
+    return liste_triee
+
+def duplicate_del_set(liste:list, display=True):
+    if not liste:
+        printError("La liste données est vide.")
+        return False
+    if display:
+        print("Liste à trier : ", liste)
+
+    liste_triee=list(set(liste))
+    if display:
+        printSuccess("La liste a été triée par set, les doublons ont été supprimés !")
+        print(liste_triee)
+    return liste_triee
+
+def ducplicate_del_dict(liste:list):
+    return list(dict.fromkey(liste))
+
+
+# Nombre premier
+# -------------------------------
+def is_prime(number):
+    if not re.match("^[0-9]+$", number):
+        printError("Attention, " + number + " n'est pas un nombre.")
+        return -1
+    number=int(number)
+
+    i=2
+    is_prime=True
+    while i<number:
+        if number%i==0:
+            is_prime=False
+            break
+        i+=1
+
+    if is_prime:
+        printSuccess(str(number) + " est un nombre premier !")
+    else:
+        printWrong(str(number) + " n'est pas un nombre premier")
+    return is_prime
 
 # SET EXERCICES
 # -------------------------------
@@ -181,25 +245,21 @@ def exercice1():
 
     is_vovel(inp)
 
-
 def exercice2():
     get_inp("Entrez une année : ")
 
     est_bissextile(inp)
-
 
 def exercice3():
     get_inp("Entrez une phrase : ")
 
     count_vovel(inp)
 
-
 def exercice4():
     get_inp("Entrez la HAUTEUR du carré (entre 1 et 10) : ")
     get_inp2("Entrez la LARGEUR du carré (entre 1 et 10) : ")
 
     multiplication(inp, inp2)
-
 
 def exercice5():
     get_inp("Écrivez un texte : ")
@@ -211,6 +271,14 @@ def exercice6():
 
     longest_word(inp)
 
+def exercice7():
+    liste=['a', 'b', 'c', 'b', 'e', 'f', 'f', 'f', 'z', 'a', 'l', ["yo", "yo2", "yo"]]
+    duplicate_del_browse(liste)
+
+def exercice8():
+    get_inp("Donnez un nombre : ")
+
+    is_prime(inp)
 
 # RUN
 # -------------------------------
@@ -220,4 +288,6 @@ def exercice6():
 # exercice3()
 # exercice4()
 # exercice5()
-exercice6()
+# exercice6()
+# exercice7()
+exercice8()

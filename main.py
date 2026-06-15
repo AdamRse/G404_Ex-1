@@ -11,8 +11,8 @@ unTuple = (2, 4, "helo", "HELLO")  # Lecture seule
 print("Tuple ranges : ", unTuple[1], unTuple[1:], unTuple[-1])
 
 
-def ma_fonction():
-    print("fonction ma_fonction")
+def ma_fonction(a:str="1"):
+    print("fonction ma_fonction, avec le paramètre "+a)
 
 print(string.punctuation)
 def diviser_nombres(a, b):
