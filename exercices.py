@@ -136,20 +136,41 @@ def multiplication(number, number2):
 # -------------------------------
 
 
-def word_count(texte):
+def word_count(texte, display=True):
+    wordCount=len(word_list(texte))
+    if display:
+        printSuccess(
+            "Le texte contient " + str(wordCount) + " mot" + ("s" if wordCount > 1 else "")
+        )
+    return wordCount
+
+def word_list(texte, display=True):
     text_split = re.split(r"[,\s;.)(:?+\[\]!{}=#]+", texte)
     wordList = []
-    wordCount = 0
     for word in text_split:
         if word != "":
-            wordCount += 1
             wordList.append(word)
-    printSuccess(
-        "Le texte contient " + str(wordCount) + " mot" + ("s" if wordCount > 1 else "")
-    )
-    printSuccess("Liste des mots : ")
-    print(wordList)
+    if display:
+        printSuccess("Liste des mots : ")
+        print(wordList)
+    return wordList
 
+# Mot le plus long
+# -------------------------------
+
+def longest_word(texte):
+    wordList=word_list(texte, False)
+    longestWord=""
+    for word in wordList:
+        if len(word) > len(longestWord):
+            longestWord=word
+
+    printSuccess("Le mot le plus long est " + longestWord + " (avec " + str(len(longestWord)) + " lettres)")
+
+def longest_word_sort(texte):
+    wordList=word_list(texte, False)
+    longestWord=max(wordList, key=len)
+    printSuccess("Le mot le plus long est " + longestWord + " (avec " + str(len(longestWord)) + " lettres)")
 
 # SET EXERCICES
 # -------------------------------
@@ -185,6 +206,11 @@ def exercice5():
 
     word_count(inp)
 
+def exercice6():
+    get_inp("Écrivez un texte : ")
+
+    longest_word(inp)
+
 
 # RUN
 # -------------------------------
@@ -193,4 +219,5 @@ def exercice5():
 # exercice2()
 # exercice3()
 # exercice4()
-exercice5()
+# exercice5()
+exercice6()
