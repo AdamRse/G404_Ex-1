@@ -193,4 +193,4 @@ def exercice5():
 # exercice2()
 # exercice3()
 # exercice4()
-# exercice5()
+exercice5()
