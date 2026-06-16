@@ -1,4 +1,6 @@
+import math
 import re
+from tkinter.constants import FALSE
 
 inp = ""
 inp2 = ""
@@ -240,25 +242,29 @@ def ducplicate_del_dict(liste: list):
 
 # Nombre premier
 # -------------------------------
-def is_prime(number):
-    if not re.match("^[0-9]+$", number):
-        printError("Attention, " + number + " n'est pas un nombre.")
+def is_prime(number, display=True):
+
+    if not re.match("^[0-9]+$", str(number)):
+        printError("Attention, " + str(number) + " n'est pas un nombre.")
         return -1
     number = int(number)
 
     i = 2
-    is_prime = True
+    is_pr = True
     while i < number:
         if number % i == 0:
-            is_prime = False
+            is_pr = False
+            break
+        if i > math.sqrt(number):
             break
         i += 1
 
-    if is_prime:
-        printSuccess(str(number) + " est un nombre premier !")
-    else:
-        printWrong(str(number) + " n'est pas un nombre premier")
-    return is_prime
+    if display:
+        if is_pr:
+            printSuccess(str(number) + " est un nombre premier !")
+        else:
+            printWrong(str(number) + " n'est pas un nombre premier")
+    return is_pr
 
 
 # SET EXERCICES
@@ -308,9 +314,13 @@ def exercice7():
 
 
 def exercice8():
-    get_inp("Donnez un nombre : ")
-
-    is_prime(inp)
+    global inp
+    get_inp("Donnez un nombre, pour calculer le prochain nombre premier supérieur : ")
+    inp = int(inp)
+    print("Recherche du premier nombre premier supérieur à " + str(inp))
+    while not is_prime(inp, False):
+        inp += 1
+    printSuccess(str(inp) + " est un premier !")
 
 
 # RUN
