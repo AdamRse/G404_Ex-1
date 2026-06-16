@@ -1,6 +1,6 @@
 import math
 import re
-from tkinter.constants import FALSE
+import time
 
 inp = ""
 inp2 = ""
@@ -166,7 +166,7 @@ def word_list(texte, display=True):
 # -------------------------------
 
 
-def longest_word(texte: str):
+def longest_word(texte: str | int):
     wordList = word_list(texte, False)
     longestWord = ""
     for word in wordList:
@@ -316,11 +316,25 @@ def exercice7():
 def exercice8():
     global inp
     get_inp("Donnez un nombre, pour calculer le prochain nombre premier supérieur : ")
+    start_time = time.time()
     inp = int(inp)
-    print("Recherche du premier nombre premier supérieur à " + str(inp))
+    start_inp = inp
+    print("Recherche du nombre premier >= à " + str(inp))
     while not is_prime(inp, False):
         inp += 1
     printSuccess(str(inp) + " est un premier !")
+    nb_calculs = inp - start_inp + 1
+    time_calcul = time.time() - start_time
+    print(
+        "-- Résultat trouvé en "
+        + str(time_calcul)
+        + " seconde"
+        + ("s" if time_calcul > 1 else "")
+        + ", pour "
+        + str(nb_calculs)
+        + (" calculs" if nb_calculs > 1 else " calcul")
+        + " --"
+    )
 
 
 # RUN
