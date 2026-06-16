@@ -1,6 +1,10 @@
+import datetime
 import math
 import re
+import sys
 import time
+
+sys.set_int_max_str_digits(0)
 
 inp = ""
 inp2 = ""
@@ -267,6 +271,58 @@ def is_prime(number, display=True):
     return is_pr
 
 
+# Suite de fibonacci
+# -------------------------------
+def fibonacci_range(limit):
+    if not re.match("^[0-9]+$", str(limit)):
+        printError("Attention, " + str(limit) + " n'est pas un nombre.")
+
+    limit = int(limit)
+    suite_fi = [0, 1]
+
+    if limit == 1:
+        suite_fi.pop()
+
+    for i in range(limit - 2):
+        current_fibo = int(suite_fi[-1]) + int(suite_fi[-2])
+        suite_fi.append(current_fibo)
+
+    printSuccess("Calcul terminé !")
+    print(suite_fi)
+
+
+def fibonacci_show(limit):
+    if not re.match("^[0-9]+$", str(limit)):
+        printError("Attention, " + str(limit) + " n'est pas un nombre.")
+
+    limit = int(limit)
+    last_fi = [0, 1]
+    if limit < 10:
+        sleepTime = 0.8
+    elif limit < 100:
+        sleepTime = 0.4
+    elif limit < 1000:
+        sleepTime = 0.1
+    elif limit < 10000:
+        sleepTime = 0.05
+    else:
+        sleepTime = 0.0001
+    if limit > 0:
+        print("0", end=" ")
+    if limit > 1:
+        print("1", end=" ")
+    if limit > 2:
+        for i in range(limit - 2):
+            num_fibo = int(last_fi[-1]) + int(last_fi[-2])
+            # print(num_fibo, end=" ")
+            sys.stdout.write("\rF" + str(i + 3) + " : " + str(num_fibo))
+            sys.stdout.flush()
+            last_fi.append(num_fibo)
+            last_fi.pop(0)
+            time.sleep(sleepTime)
+    printSuccess("Calcul terminé !")
+
+
 # SET EXERCICES
 # -------------------------------
 
@@ -319,22 +375,30 @@ def exercice8():
     start_time = time.time()
     inp = int(inp)
     start_inp = inp
-    print("Recherche du nombre premier >= à " + str(inp))
+    print("Recherche du nombre premier >= " + bcolors.BOLD + str(inp) + bcolors.ENDC)
     while not is_prime(inp, False):
         inp += 1
-    printSuccess(str(inp) + " est un premier !")
+    printSuccess(bcolors.BOLD + str(inp) + " est un premier !")
     nb_calculs = inp - start_inp + 1
-    time_calcul = time.time() - start_time
+    time_calcul = datetime.timedelta(seconds=(time.time() - start_time))
+
     print(
         "-- Résultat trouvé en "
+        + bcolors.BOLD
         + str(time_calcul)
-        + " seconde"
-        + ("s" if time_calcul > 1 else "")
+        + bcolors.ENDC
         + ", pour "
+        + bcolors.BOLD
         + str(nb_calculs)
+        + bcolors.ENDC
         + (" calculs" if nb_calculs > 1 else " calcul")
         + " --"
     )
+
+
+def exercice9():
+    get_inp("Combien de  : ")
+    fibonacci_show(inp)
 
 
 # RUN
@@ -347,4 +411,5 @@ def exercice8():
 # exercice5()
 # exercice6()
 # exercice7()
-exercice8()
+# exercice8()
+exercice9()
