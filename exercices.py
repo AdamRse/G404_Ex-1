@@ -3,6 +3,7 @@ import math
 import re
 import sys
 import time
+import random
 
 sys.set_int_max_str_digits(0)
 
@@ -219,9 +220,7 @@ def duplicate_del_browse(liste: list, display=True):
             printWrong(str(i) + " est un doublon")
 
     if display:
-        printSuccess(
-            "La liste a été triée par boucles, les doublons ont été supprimés !"
-        )
+        printSuccess("La liste a été triée par boucles, les doublons ont été supprimés !")
         print(liste_triee)
     return liste_triee
 
@@ -283,7 +282,7 @@ def fibonacci_range(limit):
     if limit == 1:
         suite_fi.pop()
 
-    for i in range(limit - 2):
+    for _ in range(limit - 2):
         current_fibo = int(suite_fi[-1]) + int(suite_fi[-2])
         suite_fi.append(current_fibo)
 
@@ -308,9 +307,14 @@ def fibonacci_show(limit):
     else:
         sleepTime = 0.0001
     if limit > 0:
-        print("0", end=" ")
+        # print("0", end=" ")
+        sys.stdout.write("\rF1 : 0")
+        sys.stdout.flush()
+        time.sleep(sleepTime)
     if limit > 1:
-        print("1", end=" ")
+        sys.stdout.write("\rF2 : 1")
+        sys.stdout.flush()
+        time.sleep(sleepTime)
     if limit > 2:
         for i in range(limit - 2):
             num_fibo = int(last_fi[-1]) + int(last_fi[-2])
@@ -320,7 +324,88 @@ def fibonacci_show(limit):
             last_fi.append(num_fibo)
             last_fi.pop(0)
             time.sleep(sleepTime)
-    printSuccess("Calcul terminé !")
+    printSuccess("\nCalcul terminé !")
+
+
+# Triangle d'étoiles
+# -------------------------------
+def draw_triangle(taille, margin=1):
+    if not re.match("^[0-9]+$", str(taille)):
+        printError("La taille doit être un nombre entre 1 et 80. " + str(taille) + " n'est pas un nombre.")
+    if not re.match("^[0-9]+$", str(margin)):
+        printError("La marge doit être un nombre entre 1 et 100. " + str(margin) + " n'est pas un nombre.")
+    taille = int(taille)
+    margin = int(margin)
+    if taille > 80 or taille <= 0:
+        printError("La taille doit être un nombre entre 1 et 80. taille donnée : " + str(taille))
+        return False
+    if margin > 300 or margin < 0:
+        printError("La marge doit être un nombre entre 0 et 300. marge donnée : " + str(margin))
+        return False
+
+    stars = 1
+    for i in range(taille):
+        if i < 1:
+            continue
+        stars = (i * 2) - 1
+        blank_spaces = round((taille * 2) - 1 / 2) - math.trunc(stars / 2) + margin
+        # print("ROUND " + str(i))
+        # print("blank : " + str(blank_spaces))
+        # print("stars : " + str(stars))
+        while blank_spaces > 0:
+            print(" ", end="")
+            blank_spaces -= 1
+
+        while stars > 0:
+            print("*", end="")
+            stars -= 1
+        print(" ")
+
+def draw_triangle_no_while(taille, margin=1):
+    if not re.match("^[0-9]+$", str(taille)):
+        printError("La taille doit être un nombre entre 1 et 80. " + str(taille) + " n'est pas un nombre.")
+    if not re.match("^[0-9]+$", str(margin)):
+        printError("La marge doit être un nombre entre 1 et 100. " + str(margin) + " n'est pas un nombre.")
+    taille = int(taille)
+    margin = int(margin)
+    if taille > 80 or taille <= 0:
+        printError("La taille doit être un nombre entre 1 et 80. taille donnée : " + str(taille))
+        return False
+    if margin > 300 or margin < 0:
+        printError("La marge doit être un nombre entre 0 et 300. marge donnée : " + str(margin))
+        return False
+
+    tree=bcolors.OKGREEN
+    for i in range(1,taille+1):
+        tree+=("*"*(i*2-1)).center(taille*2+margin)+"\n"
+
+    print(tree+bcolors.ENDC)
+
+def infinite_triangle():
+    max_width=118
+    min_width=1
+    i=min_width
+    increase=True
+    colorStart=""
+    colorStop=bcolors.ENDC
+    colors=[bcolors.FAIL,bcolors.OKBLUE,bcolors.OKCYAN,bcolors.OKGREEN,bcolors.WARNING]
+    while True:
+        print(colorStart + ("*"*(i*2-1)).center(max_width*2+1) + colorStop)
+
+        if i<=min_width:
+            increase=True
+            colorStart = random.choice(colors)
+            rand_num=random.randint(0,10)
+            if rand_num<3:
+                colorStart+=bcolors.BOLD
+        elif i>=max_width:
+            increase=False
+        if increase:
+            i+=1
+        else:
+            i-=1
+        time.sleep(0.01)
+
 
 
 # SET EXERCICES
@@ -397,8 +482,20 @@ def exercice8():
 
 
 def exercice9():
-    get_inp("Combien de  : ")
+    get_inp("Combien de nombre de Fibonaccin dois-je calculer ? : ")
     fibonacci_show(inp)
+
+
+def exercice10():
+    # get_inp("Taille du triangle : ")
+    # taille = inp
+    # get_inp("Marge à gauche (optionel) : ")
+    # marge = inp
+    # if not marge:
+    #     marge = 0
+    #draw_triangle(taille, int(marge))
+    #draw_triangle_no_while(taille, int(marge))
+    infinite_triangle()
 
 
 # RUN
@@ -412,4 +509,5 @@ def exercice9():
 # exercice6()
 # exercice7()
 # exercice8()
-exercice9()
+# exercice9()
+exercice10()
