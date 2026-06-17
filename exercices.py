@@ -345,9 +345,7 @@ def draw_triangle(taille, margin=1):
         return False
 
     stars = 1
-    for i in range(taille):
-        if i < 1:
-            continue
+    for i in range(1,taille):
         stars = (i * 2) - 1
         blank_spaces = round((taille * 2) - 1 / 2) - math.trunc(stars / 2) + margin
         # print("ROUND " + str(i))
@@ -389,6 +387,7 @@ def infinite_triangle(max_width=math.trunc(os.get_terminal_size().columns/2), mi
     colorStop=bcolors.ENDC
     colors=[bcolors.FAIL,bcolors.OKBLUE,bcolors.OKCYAN,bcolors.OKGREEN,bcolors.WARNING]
     while True:
+        max_width=math.trunc(os.get_terminal_size().columns/2) # En cas de redimentionement du terminal
         print(colorStart + ("@"*(i*2-1)).center(max_width*2) + colorStop)
 
         if i<=min_width:
