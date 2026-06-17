@@ -4,6 +4,7 @@ import re
 import sys
 import time
 import random
+import os
 
 sys.set_int_max_str_digits(0)
 
@@ -381,16 +382,14 @@ def draw_triangle_no_while(taille, margin=1):
 
     print(tree+bcolors.ENDC)
 
-def infinite_triangle():
-    max_width=118
-    min_width=1
+def infinite_triangle(max_width=math.trunc(os.get_terminal_size().columns/2), min_width=1):
     i=min_width
     increase=True
     colorStart=""
     colorStop=bcolors.ENDC
     colors=[bcolors.FAIL,bcolors.OKBLUE,bcolors.OKCYAN,bcolors.OKGREEN,bcolors.WARNING]
     while True:
-        print(colorStart + ("*"*(i*2-1)).center(max_width*2+1) + colorStop)
+        print(colorStart + ("@"*(i*2-1)).center(max_width*2) + colorStop)
 
         if i<=min_width:
             increase=True
@@ -398,6 +397,8 @@ def infinite_triangle():
             rand_num=random.randint(0,10)
             if rand_num<3:
                 colorStart+=bcolors.BOLD
+            elif rand_num<5:
+                colorStart+=bcolors.UNDERLINE
         elif i>=max_width:
             increase=False
         if increase:
