@@ -387,7 +387,7 @@ def infinite_triangle(max_width=math.trunc(os.get_terminal_size().columns/2), mi
     colorStop=bcolors.ENDC
     colors=[bcolors.FAIL,bcolors.OKBLUE,bcolors.OKCYAN,bcolors.OKGREEN,bcolors.WARNING]
     while True:
-        max_width=math.trunc(os.get_terminal_size().columns/2) # En cas de redimentionement du terminal
+        # max_width=math.trunc(os.get_terminal_size().columns/2) # En cas de redimentionement du terminal
         print(colorStart + ("@"*(i*2-1)).center(max_width*2) + colorStop)
 
         if i<=min_width:
@@ -407,6 +407,45 @@ def infinite_triangle(max_width=math.trunc(os.get_terminal_size().columns/2), mi
         time.sleep(0.01)
 
 
+
+# Palindrome
+# -------------------------------
+def is_palindrome(word, display=True):
+    if len(word) < 2:
+        return False
+    word=str(word)
+    wordList=list(word.lower())
+    if wordList==wordList[::-1]:
+        if display:
+            printSuccess(word + " est un palindrome !")
+        return True
+    else:
+        if display:
+            printWrong(word + " n'est pas un palindrome.")
+        return False
+
+def is_palindrome_text(text):
+    wordList = word_list(text, False)
+    if not wordList:
+        printError("Impossible de trouver un mot dans le texte donné.")
+        return -1
+
+    palindromeList=[]
+    for word in wordList:
+        if is_palindrome(word, False):
+            palindromeList.append(word)
+
+    nb_palindromes=len(palindromeList)
+    if nb_palindromes == 0:
+        printWrong("Il n'y a aucun palindrome dans la phrase.")
+        return False
+    else:
+        printSuccess("Il y a " + str(nb_palindromes) + (" palindromes" if nb_palindromes > 1 else " palindrome") + " dans le texte !")
+        printSuccess(("palindromes trouvés :" if nb_palindromes > 1 else "palindrome trouvé :"))
+        print(palindromeList)
+
+# Chiffrement César
+# -------------------------------
 
 # SET EXERCICES
 # -------------------------------
@@ -497,6 +536,12 @@ def exercice10():
     #draw_triangle_no_while(taille, int(marge))
     infinite_triangle()
 
+def exercice11():
+    #get_inp("Donnez un mot : ")
+    #is_palindrome(inp)
+    get_inp("Écrivez une phrase : ")
+    is_palindrome_text(inp)
+
 
 # RUN
 # -------------------------------
@@ -510,4 +555,5 @@ def exercice10():
 # exercice7()
 # exercice8()
 # exercice9()
-exercice10()
+# exercice10()
+exercice11()
