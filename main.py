@@ -2,6 +2,7 @@ import string
 
 print(" ---------- Tips ----------")
 print("Exposant : ", 2**3)  # Exposant
+print("Tronquer une division : ",5//2)
 print("Ou exclusif : ", True ^ True)  # Ou exclusif (seulement 1 des 2 doit être true)
 print("in : ", "a" in ["a", "b", "c"])
 uneListe = []
@@ -9,7 +10,6 @@ uneListe.append("coucou")
 print(uneListe)
 unTuple = (2, 4, "helo", "HELLO")  # Lecture seule
 print("Tuple ranges : ", unTuple[1], unTuple[1:], unTuple[-1])
-
 print("Range -1 : ", range(-1))
 
 
@@ -35,3 +35,7 @@ def diviser_nombres(a, b):
     finally:
         # 4. Le bloc FINALLY (optionnel) : S'exécute TOUJOURS à la fin, qu'il y ait eu une erreur ou non
         print("--- Fin de la tentative ---\n")
+
+for i in range(25,40):
+    print("Pour i = " + str(i))
+    print(i / 26)

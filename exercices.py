@@ -473,9 +473,7 @@ def cesar_crypt(texte, decalage:int=3):
         except ValueError:
             output+=lettre
             continue
-        newIndex=index+decalage
-        if newIndex > sizeAlphabetList:
-            newIndex -= sizeAlphabetList
+        newIndex=(index+decalage)%sizeAlphabetList
         output+=alphabetList[newIndex].upper() if isUpper else alphabetList[newIndex]
     print("Hachage : ", output)
     return output
@@ -524,17 +522,14 @@ def string_check(string):
     return conforme
 
 def string_check_no_switch(string):
-    stack=[]
+    pile=[]
     open_close=["(",")","[","]","{","}"]
     strings_detection=['"',"'","`"]
-    prev_sign=""
     string_detected=False
     conforme=True
     for id, letter in enumerate(string):
-        if prev_sign=="\\":
-            prev_sign=""
+        if id > 0 and string[id-1]=="\\":
             continue
-
 
         if letter in strings_detection:
             if string_detected:
@@ -542,27 +537,24 @@ def string_check_no_switch(string):
                     string_detected=False
             else:
                 string_detected=letter
-            prev_sign=letter
             continue
         if string_detected:
-            prev_sign=letter
             continue
 
         if letter in open_close[::2]:
-            stack.append(letter)
+            pile.append(letter)
         if letter in open_close[1::2]:
-            if len(stack) == 0:
+            if len(pile) == 0:
                 conforme=False
                 break
             index_close=open_close.index(letter)
-            if open_close[index_close-1]==stack[-1]:
-                stack.pop()
+            if open_close[index_close-1]==pile[-1]:
+                pile.pop()
             else:
                 conforme=False
                 break
 
-        prev_sign=letter
-    if len(stack) or string_detected:
+    if len(pile) or string_detected:
         print("\033[91mTexte non confome.\033[0m")
         return False
     print("\033[92mTexte bien formaté !\033[0m" if conforme else "\033[91mTexte non confome.\033[0m")
@@ -668,11 +660,11 @@ def exercice13(tests=False):
         strings_false=[
             "())","][","}","(]","[}","([)","{\\}","\\()","{\\[]}","(')()'",'["{}]"', # 0 à 10
             '"()[]{}{"}','``([)]',"()`\\`","'()",'"[]',"{}`","\\``()","{}`","'`(`",'"`', # 11 à 20
-            "()'()`",'\\"()"',"'`'`"
+            "()'()`",'\\"()"',"'`'`", "`````"
         ]
         strings_true=[
             "()","[]","{}","","[\\]]","\\}{}","([])\\}","(`([]]]]`)","''()[]","``{}",'"[][["()',"(`)[]]`)",
-            "''`(((((((((((`","\\`()`[[[`",'"\\")("{}'
+            "''`(((((((((((`","\\`()`[[[`",'"\\")("{}', "''''''"
         ]
 
         i=0
@@ -705,5 +697,5 @@ def exercice13(tests=False):
 # exercice9()
 # exercice10()
 # exercice11()
-# exercice12()
-exercice13(True)
+exercice12()
+# exercice13(True)
