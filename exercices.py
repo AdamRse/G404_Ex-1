@@ -1,5 +1,7 @@
 import datetime
 import math
+from operator import index
+from pydoc import text
 import re
 import sys
 import time
@@ -44,6 +46,18 @@ def printSuccess(msg):
 
 def printWrong(msg):
     print(bcolors.WARNING + msg + bcolors.ENDC)
+
+def del_accents(texte):
+    accent = ['é', 'è', 'ê', 'à', 'ù', 'û', 'ç', 'ô', 'î', 'ï', 'â']
+    sans_accent = ['e', 'e', 'e', 'a', 'u', 'u', 'c', 'o', 'i', 'i', 'a']
+    output=""
+    for lettre in texte:
+        try:
+            id=accent.index(lettre)
+            output+=sans_accent[id]
+        except ValueError:
+            output+=lettre
+    return output
 
 
 # Est une voyelle ?
@@ -446,39 +460,118 @@ def is_palindrome_text(text):
 
 # Chiffrement César
 # -------------------------------
+def cesar_crypt(texte, decalage:int=3):
+    texte=del_accents(texte)
+    alphabetList=list("abcdefghijklmnopqrstuvwxyz")
+    sizeAlphabetList=len(alphabetList)
+    output=""
+    for lettre in texte:
+        isUpper=lettre.isupper()
+        lettre=lettre.lower()
+        try:
+            index=alphabetList.index(lettre)
+        except ValueError:
+            output+=lettre
+            continue
+        newIndex=index+decalage
+        if newIndex > sizeAlphabetList:
+            newIndex -= sizeAlphabetList
+        output+=alphabetList[newIndex].upper() if isUpper else alphabetList[newIndex]
+    print("Hachage : ", output)
+    return output
 
+# Chiffrement César
+# -------------------------------
+def string_check(string):
+    stack=[]
+    conforme=True
+    for letter in string:
+        match letter:
+            case "("|"["|"{":
+                stack.append(letter)
+            case ")":
+                if len(stack) == 0:
+                    conforme=False
+                    break
+                if stack[-1]=="(":
+                    stack.pop()
+                else:
+                    conforme=False
+            case "]":
+                if len(stack) == 0:
+                    conforme=False
+                    break
+                if stack[-1]=="[":
+                    stack.pop()
+                else:
+                    conforme=False
+            case "}":
+                if len(stack) == 0:
+                    conforme=False
+                    break
+                if stack[-1]=="{":
+                    stack.pop()
+                else:
+                    conforme=False
+
+    if not len(stack) == 0:
+        conforme=False
+
+    if conforme:
+        printSuccess("Le texte est conforme !")
+    else:
+        printWrong("Le texte n'est pas conforme.")
+    return conforme
+
+def string_check_no_switch(string):
+    stack=[]
+    open_close=["(",")","[","]","{","}"]
+    conforme=True
+    for letter in string:
+        if letter in open_close[::2]:
+            stack.append(letter)
+        if letter in open_close[1::2]:
+            if len(stack) == 0:
+                conforme=False
+                break
+            index_close=open_close.index(letter)
+            if open_close[index_close-1]==stack[-1]:
+                stack.pop()
+            else:
+                conforme=False
+                break
+    if len(stack):
+        print("\033[91mTexte non confome.\033[0m")
+        return False
+    print("\033[92mTexte bien formaté !\033[0m" if conforme else "\033[91mTexte non confome.\033[0m")
+    return conforme
 # SET EXERCICES
 # -------------------------------
 
 
 def exercice1():
     get_inp("Écrire une lettre : ")
-
     is_vovel(inp)
 
 
 def exercice2():
     get_inp("Entrez une année : ")
-
     est_bissextile(inp)
 
 
 def exercice3():
     get_inp("Entrez une phrase : ")
-
     count_vovel(inp)
 
 
 def exercice4():
     get_inp("Entrez la HAUTEUR du carré (entre 1 et 10) : ")
     get_inp2("Entrez la LARGEUR du carré (entre 1 et 10) : ")
-
     multiplication(inp, inp2)
 
 
 def exercice5():
     get_inp("Écrivez un texte : ")
-
     word_count(inp)
 
 
@@ -543,6 +636,13 @@ def exercice11():
     is_palindrome_text(inp)
 
 
+def exercice12():
+    get_inp("Écrivez une phrase : ")
+    cesar_crypt(inp)
+
+def exercice13():
+    get_inp("Envoyez parenthèses et crochets : ")
+    string_check_no_switch(inp)
 # RUN
 # -------------------------------
 
@@ -556,4 +656,6 @@ def exercice11():
 # exercice8()
 # exercice9()
 # exercice10()
-exercice11()
+# exercice11()
+# exercice12()
+exercice13()
