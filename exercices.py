@@ -530,18 +530,23 @@ def string_check_no_switch(string):
     prev_sign=""
     string_detected=False
     conforme=True
-    for letter in string:
+    for id, letter in enumerate(string):
         if prev_sign=="\\":
             prev_sign=""
             continue
 
+
         if letter in strings_detection:
-            if string_detected and string_detected==letter:
-                string_detected=False
+            if string_detected:
+                if string_detected==letter:
+                    string_detected=False
             else:
                 string_detected=letter
+            prev_sign=letter
             continue
-
+        if string_detected:
+            prev_sign=letter
+            continue
 
         if letter in open_close[::2]:
             stack.append(letter)
@@ -661,21 +666,27 @@ def exercice13(tests=False):
     if tests:
         printWrong("Tests :")
         strings_false=[
-            "())","][","}","(]","[}","([)","{\\}","\\()","{\\[]}",
-            "(')()'",'["{}]"','"()[]{}{"}','``([)]',"()``","'()",'"[]',"{}`","\\`()","{}`","'`(`",'"`',"()'()`",'\\"()"',"'`'`"
+            "())","][","}","(]","[}","([)","{\\}","\\()","{\\[]}","(')()'",'["{}]"', # 0 à 10
+            '"()[]{}{"}','``([)]',"()`\\`","'()",'"[]',"{}`","\\``()","{}`","'`(`",'"`', # 11 à 20
+            "()'()`",'\\"()"',"'`'`"
         ]
-        strings_true=["()","[]","{}","","[\\]]","\\}{}","([])\\}",
-            "(`([]]]]`)","''()[]","``{}",'"[][["()',"(`)[]]`)","''`(((((((((((`","\\`()`[[[`",'"\\")("{}'
+        strings_true=[
+            "()","[]","{}","","[\\]]","\\}{}","([])\\}","(`([]]]]`)","''()[]","``{}",'"[][["()',"(`)[]]`)",
+            "''`(((((((((((`","\\`()`[[[`",'"\\")("{}'
         ]
 
+        i=0
         for test in strings_false:
             if string_check_no_switch(test):
-                printError("Test échoué pour : "+test)
+                printError("Test (FALSE:"+str(i)+") échoué pour : \033[1m"+test)
                 return False
+            i+=1
+        i=0
         for test in strings_true:
             if not string_check_no_switch(test):
-                printError("Test échoué pour : "+test)
+                printError("Test (TRUE:"+str(i)+") échoué pour : \033[1m"+test)
                 return False
+            i+=1
         printSuccess("\n____________________________________\n--- Tous les tests sont passés ! ---\n____________________________________")
     else:
         get_inp("Envoyez parenthèses et crochets : ")
