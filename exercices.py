@@ -526,8 +526,23 @@ def string_check(string):
 def string_check_no_switch(string):
     stack=[]
     open_close=["(",")","[","]","{","}"]
+    strings_detection=['"',"'","`"]
+    prev_sign=""
+    string_detected=False
     conforme=True
     for letter in string:
+        if prev_sign=="\\":
+            prev_sign=""
+            continue
+
+        if letter in strings_detection:
+            if string_detected and string_detected==letter:
+                string_detected=False
+            else:
+                string_detected=letter
+            continue
+
+
         if letter in open_close[::2]:
             stack.append(letter)
         if letter in open_close[1::2]:
@@ -540,7 +555,9 @@ def string_check_no_switch(string):
             else:
                 conforme=False
                 break
-    if len(stack):
+
+        prev_sign=letter
+    if len(stack) or string_detected:
         print("\033[91mTexte non confome.\033[0m")
         return False
     print("\033[92mTexte bien formaté !\033[0m" if conforme else "\033[91mTexte non confome.\033[0m")
@@ -640,9 +657,29 @@ def exercice12():
     get_inp("Écrivez une phrase : ")
     cesar_crypt(inp)
 
-def exercice13():
-    get_inp("Envoyez parenthèses et crochets : ")
-    string_check_no_switch(inp)
+def exercice13(tests=False):
+    if tests:
+        printWrong("Tests :")
+        strings_false=[
+            "())","][","}","(]","[}","([)","{\\}","\\()","{\\[]}",
+            "(')()'",'["{}]"','"()[]{}{"}','``([)]',"()``","'()",'"[]',"{}`","\\`()","{}`","'`(`",'"`',"()'()`",'\\"()"',"'`'`"
+        ]
+        strings_true=["()","[]","{}","","[\\]]","\\}{}","([])\\}",
+            "(`([]]]]`)","''()[]","``{}",'"[][["()',"(`)[]]`)","''`(((((((((((`","\\`()`[[[`",'"\\")("{}'
+        ]
+
+        for test in strings_false:
+            if string_check_no_switch(test):
+                printError("Test échoué pour : "+test)
+                return False
+        for test in strings_true:
+            if not string_check_no_switch(test):
+                printError("Test échoué pour : "+test)
+                return False
+        printSuccess("\n____________________________________\n--- Tous les tests sont passés ! ---\n____________________________________")
+    else:
+        get_inp("Envoyez parenthèses et crochets : ")
+        string_check_no_switch(inp)
 # RUN
 # -------------------------------
 
@@ -658,4 +695,4 @@ def exercice13():
 # exercice10()
 # exercice11()
 # exercice12()
-exercice13()
+exercice13(True)
