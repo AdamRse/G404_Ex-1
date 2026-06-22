@@ -39,3 +39,8 @@ def diviser_nombres(a, b):
 for i in range(25,40):
     print("Pour i = " + str(i))
     print(i / 26)
+
+a=5
+b=a
+b+=1
+print(a,b)

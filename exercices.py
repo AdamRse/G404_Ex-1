@@ -7,6 +7,7 @@ import sys
 import time
 import random
 import os
+import itertools
 
 sys.set_int_max_str_digits(0)
 
@@ -478,7 +479,7 @@ def cesar_crypt(texte, decalage:int=3):
     print("Hachage : ", output)
     return output
 
-# Chiffrement César
+# String détection
 # -------------------------------
 def string_check(string):
     stack=[]
@@ -559,6 +560,92 @@ def string_check_no_switch(string):
         return False
     print("\033[92mTexte bien formaté !\033[0m" if conforme else "\033[91mTexte non confome.\033[0m")
     return conforme
+
+# reverse middle
+# -------------------------------
+def reverse_middle(liste_reverse_middle):
+    first=liste_reverse_middle[(len(liste_reverse_middle)//2):]
+    second=liste_reverse_middle[:(len(liste_reverse_middle)//2)]
+    first.extend(second)
+    print(first)
+
+# Expression régulière
+# -------------------------------
+def do_regex(string, pattern):
+    index_reader=0
+    is_match=True
+    print("A tester : ",string, pattern)
+    for id, p in enumerate(pattern):
+        print("String : "+string[index_reader],"\nPattern : "+p)
+
+        match p:
+            case "*":
+                previous_p=pattern[id-1]
+                if len(pattern)-1>id:
+                    next_p=pattern[id+1]
+                else:
+                    next_p=False
+                sub_reader=index_reader
+                print("while détecté : ",string[sub_reader] == previous_p, string[sub_reader]==".")
+                while string[sub_reader] == previous_p or string[sub_reader]==".":
+                    print("sub reader : ",sub_reader," Len string :",len(string))
+                    sub_reader+=1
+                    if sub_reader>=len(string):
+                        if not next_p:
+                            return True
+                        else:
+                            print("Il reste de la regex, repositionement de index reader sur le prochain caractère regex")
+                            index_reader+=1
+                            print("Recherche dans la range ",index_reader,sub_reader)
+                            for i in range(index_reader,sub_reader):
+                                if string[i]==next_p:
+                                    print("next char trouvé dans index reader=",index_reader)
+                                else:
+                                    index_reader+=1
+
+            case ".":
+                index_reader+=1
+            case _:
+                if not p==string[index_reader]:
+                    next_pattern=pattern[id+1]
+                    if not next_pattern == "*":
+                        is_match=False
+                        break
+                index_reader+=1
+        print()
+
+        # if index_reader>=len(string):
+        #     break
+    ######
+    if not index_reader == len(string):
+        is_match=False
+    print(is_match)
+    return is_match
+
+# Fusionner et trier 2 listes
+# -------------------------------
+def sort_merge(l1, l2):
+    def get_min(lmin:list):
+        minimum=False
+        for n in lmin:
+            if not minimum:
+                minimum=n
+            else:
+                if minimum > n:
+                    minimum=n
+        return minimum
+    l1.extend(l2)
+    sorted=[]
+    for _ in range(len(l1)):
+        minL1=get_min(l1)
+        sorted.append(minL1)
+        l1.remove(minL1)
+    printSuccess("Fusion terminée !")
+    print(sorted)
+
+
+
+
 # SET EXERCICES
 # -------------------------------
 
@@ -567,38 +654,31 @@ def exercice1():
     get_inp("Écrire une lettre : ")
     is_vovel(inp)
 
-
 def exercice2():
     get_inp("Entrez une année : ")
     est_bissextile(inp)
 
-
 def exercice3():
     get_inp("Entrez une phrase : ")
     count_vovel(inp)
-
 
 def exercice4():
     get_inp("Entrez la HAUTEUR du carré (entre 1 et 10) : ")
     get_inp2("Entrez la LARGEUR du carré (entre 1 et 10) : ")
     multiplication(inp, inp2)
 
-
 def exercice5():
     get_inp("Écrivez un texte : ")
     word_count(inp)
-
 
 def exercice6():
     get_inp("Écrivez un texte : ")
 
     longest_word(inp)
 
-
 def exercice7():
     liste = ["a", "b", "c", "b", "e", "f", "f", "f", "z", "a", "l", ["yo", "yo2", "yo"]]
     duplicate_del_browse(liste)
-
 
 def exercice8():
     global inp
@@ -626,11 +706,9 @@ def exercice8():
         + " --"
     )
 
-
 def exercice9():
     get_inp("Combien de nombre de Fibonaccin dois-je calculer ? : ")
     fibonacci_show(inp)
-
 
 def exercice10():
     # get_inp("Taille du triangle : ")
@@ -648,7 +726,6 @@ def exercice11():
     #is_palindrome(inp)
     get_inp("Écrivez une phrase : ")
     is_palindrome_text(inp)
-
 
 def exercice12():
     get_inp("Écrivez une phrase : ")
@@ -683,6 +760,38 @@ def exercice13(tests=False):
     else:
         get_inp("Envoyez parenthèses et crochets : ")
         string_check_no_switch(inp)
+
+def exercice14():
+    #get_inp("Envoyez parenthèses et crochets : ")
+    liste_reverse_middle=["a", "b", "c", "d"]
+    reverse_middle(liste_reverse_middle)
+
+def exercice15(tests=False):
+    if tests:
+        test_cases = {
+            "s" : ["aa", "aa", "ab", "aab", "ab", "aaa", "a", "mississippi", "bbbba", "ab", "bb", "bbab", "abbabaaaaaaacaa", "bcbabcaacacbcabac"],
+            "p" : ["a", "a*", ".*", "c*a*b", ".*c", "a*a", "ab*", "mis*is*p*.", ".*a*a", ".*..c*", ".bab", "b*a*", "a*.*b.a.*c*b*a*c*", "a*c*a*b*.*aa*c*a*a*"],
+            "expected_answer" : [False, True, True, True, False, True, True, False, True, True, False, False, True, True]
+            }
+        errors=False
+        for i in range(len(test_cases["s"])):
+            result=do_regex(test_cases["s"][i], test_cases["p"][i])
+            if result == test_cases["expected_answer"][i]:
+                printSuccess("Pattern "+test_cases["p"][i]+" (string : '"+test_cases["s"][i]+"') correct !")
+            else:
+                errors="Erreur sur le pattern "+test_cases["p"][i]+" (string : '"+test_cases["s"][i]+"'), renvoie "+str(result)+" au lieu de "+str(test_cases["expected_answer"][i])
+                break
+        if errors:
+            printError(errors)
+        else:
+            printSuccess("Les tests sont bien passés !")
+    else:
+        do_regex("abc","a*b*c*d*")
+
+def exercice16():
+    l1=[18,2,10]
+    l2=[20,8, 1, 7, 8]
+    sort_merge(l1, l2)
 # RUN
 # -------------------------------
 
@@ -697,5 +806,8 @@ def exercice13(tests=False):
 # exercice9()
 # exercice10()
 # exercice11()
-exercice12()
+# exercice12()
 # exercice13(True)
+# exercice14()
+exercice15(True)
+# exercice16()
