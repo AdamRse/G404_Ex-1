@@ -1,3 +1,4 @@
+from head import *
 import datetime
 import math
 from operator import index
@@ -8,57 +9,10 @@ import time
 import random
 import os
 import itertools
+from collections import Counter
 
 sys.set_int_max_str_digits(0)
 
-inp = ""
-inp2 = ""
-
-
-class bcolors:
-    HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    OKCYAN = "\033[96m"
-    OKGREEN = "\033[92m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-    BOLD = "\033[1m"
-    UNDERLINE = "\033[4m"
-
-
-def get_inp(msg):
-    global inp
-    inp = input(msg)
-
-
-def get_inp2(msg):
-    global inp2
-    inp2 = input(msg)
-
-
-def printError(msg):
-    print(bcolors.FAIL + msg + bcolors.ENDC)
-
-
-def printSuccess(msg):
-    print(bcolors.OKGREEN + msg + bcolors.ENDC)
-
-
-def printWrong(msg):
-    print(bcolors.WARNING + msg + bcolors.ENDC)
-
-def del_accents(texte):
-    accent = ['é', 'è', 'ê', 'à', 'ù', 'û', 'ç', 'ô', 'î', 'ï', 'â']
-    sans_accent = ['e', 'e', 'e', 'a', 'u', 'u', 'c', 'o', 'i', 'i', 'a']
-    output=""
-    for lettre in texte:
-        try:
-            id=accent.index(lettre)
-            output+=sans_accent[id]
-        except ValueError:
-            output+=lettre
-    return output
 
 
 # Est une voyelle ?
@@ -572,26 +526,46 @@ def reverse_middle(liste_reverse_middle):
 # Expression régulière
 # -------------------------------
 def do_regex(string, pattern):
+    def isStarAfterPattern(id, patternString):
+        next_p=False
+        if len(patternString)-1>id:
+            return next_p=="*"
+        else:
+            return False
+    def getNextPattern(id, patternString):
+        if len(patternString)-1>id:
+            return patternString[id+1]
+        else:
+            return False
+
     index_reader=0
     is_match=True
+    skip_next=False
     print("A tester : ",string, pattern)
     for id, p in enumerate(pattern):
-        print("String : "+string[index_reader],"\nPattern : "+p)
+        if skip_next:
+            skip_next=False
+            continue
+        print("String : "+string[index_reader],"(",index_reader,")\nPattern : "+p)
 
         match p:
             case "*":
                 previous_p=pattern[id-1]
                 if previous_p == string[index_reader]:
+                    print("cas *, on va calculer le nombre de ",previous_p," dans la string")
                     while previous_p == string[index_reader]:
+                        print(previous_p,"=",string[index_reader]," index_reader : ",index_reader)
                         index_reader+=1
-                        if len(string) >= index_reader:
+                        if len(string) <= index_reader:
+                            print("On sort de la string, index reader = ",index_reader, "et la taille de la string est : ",len(string))
                             return True
+                        print("On passe l'index reader à ",index_reader,string[index_reader])
+                    print("On sort du wile avec la string : ",index_reader,string[index_reader])
 
                 elif previous_p == ".":
-                    print("cas .* détecté !")
-                    if len(pattern)-1>id:
-                        next_p=pattern[id+1]
-                    else:
+                    printWrong("cas .* détecté !")
+                    next_p=getNextPattern(id, pattern)
+                    if not next_p:
                         print("aucun pattern après à tester, on peut renvoyer True")
                         return True
                     print("Il y a un pattern next_p:",next_p," qui détermine la fin du comptage")
@@ -603,21 +577,38 @@ def do_regex(string, pattern):
                             return False
 
             case ".":
-                index_reader+=1
+                next_p=getNextPattern(id, pattern)
+                if not next_p:
+                    print("Il n'y a pas de patern ensuite, le . fonctionne pour tout, on sort de la boucle")
+                    break
+                if next_p == "*":
+                    print(".*, on le calculrera dans la boucle suivante, next, sans incrémenter index_reader")
+                else:
+                    index_reader+=1
             case _:
                 if not p==string[index_reader]:
-                    next_pattern=pattern[id+1]
-                    if not next_pattern == "*":
-                        is_match=False
-                        break
+                    print("On compare",p," n'est pas ",string[index_reader])
+                    next_p=getNextPattern(id, pattern)
+                    if not next_p:
+                        print("Le pattern ",p,"ne correspond pas à la string, et n'est pas annulé par une étoile, on peux renvoyer false")
+                        return False
+                    if not next_p == "*":
+                        print("Le pattern ",p,"ne correspond pas à la string, pas d'étoile derrière. FALSE")
+                        return False
+                    else:
+                        print("On a testé le prochain élément")
+                        skip_next=True
+                    print(p," est annulé par",next_p)
                 index_reader+=1
         print()
 
         if index_reader>=len(string):
+            print("Sortie de boucle : Détection index_reader >= len(string)",index_reader,len(string))
             break
     ######
     if not index_reader == len(string):
-        is_match=False
+        print("index reader nest pas la longueur de la sting",index_reader,len(string))
+        return False
     print(is_match)
     return is_match
 
@@ -642,171 +633,17 @@ def sort_merge(l1, l2):
     printSuccess("Fusion terminée !")
     print(sorted)
 
-
-
-
-# SET EXERCICES
+# Trier par fréquence d'apparition
 # -------------------------------
-
-
-def exercice1():
-    get_inp("Écrire une lettre : ")
-    is_vovel(inp)
-
-def exercice2():
-    get_inp("Entrez une année : ")
-    est_bissextile(inp)
-
-def exercice3():
-    get_inp("Entrez une phrase : ")
-    count_vovel(inp)
-
-def exercice4():
-    get_inp("Entrez la HAUTEUR du carré (entre 1 et 10) : ")
-    get_inp2("Entrez la LARGEUR du carré (entre 1 et 10) : ")
-    multiplication(inp, inp2)
-
-def exercice5():
-    get_inp("Écrivez un texte : ")
-    word_count(inp)
-
-def exercice6():
-    get_inp("Écrivez un texte : ")
-
-    longest_word(inp)
-
-def exercice7():
-    liste = ["a", "b", "c", "b", "e", "f", "f", "f", "z", "a", "l", ["yo", "yo2", "yo"]]
-    duplicate_del_browse(liste)
-
-def exercice8():
-    global inp
-    get_inp("Donnez un nombre, pour calculer le prochain nombre premier supérieur : ")
-    start_time = time.time()
-    inp = int(inp)
-    start_inp = inp
-    print("Recherche du nombre premier >= " + bcolors.BOLD + str(inp) + bcolors.ENDC)
-    while not is_prime(inp, False):
-        inp += 1
-    printSuccess(bcolors.BOLD + str(inp) + " est un premier !")
-    nb_calculs = inp - start_inp + 1
-    time_calcul = datetime.timedelta(seconds=(time.time() - start_time))
-
-    print(
-        "-- Résultat trouvé en "
-        + bcolors.BOLD
-        + str(time_calcul)
-        + bcolors.ENDC
-        + ", pour "
-        + bcolors.BOLD
-        + str(nb_calculs)
-        + bcolors.ENDC
-        + (" calculs" if nb_calculs > 1 else " calcul")
-        + " --"
-    )
-
-def exercice9():
-    get_inp("Combien de nombre de Fibonaccin dois-je calculer ? : ")
-    fibonacci_show(inp)
-
-def exercice10():
-    # get_inp("Taille du triangle : ")
-    # taille = inp
-    # get_inp("Marge à gauche (optionel) : ")
-    # marge = inp
-    # if not marge:
-    #     marge = 0
-    #draw_triangle(taille, int(marge))
-    #draw_triangle_no_while(taille, int(marge))
-    infinite_triangle()
-
-def exercice11():
-    #get_inp("Donnez un mot : ")
-    #is_palindrome(inp)
-    get_inp("Écrivez une phrase : ")
-    is_palindrome_text(inp)
-
-def exercice12():
-    get_inp("Écrivez une phrase : ")
-    cesar_crypt(inp)
-
-def exercice13(tests=False):
-    if tests:
-        printWrong("Tests :")
-        strings_false=[
-            "())","][","}","(]","[}","([)","{\\}","\\()","{\\[]}","(')()'",'["{}]"', # 0 à 10
-            '"()[]{}{"}','``([)]',"()`\\`","'()",'"[]',"{}`","\\``()","{}`","'`(`",'"`', # 11 à 20
-            "()'()`",'\\"()"',"'`'`", "`````"
-        ]
-        strings_true=[
-            "()","[]","{}","","[\\]]","\\}{}","([])\\}","(`([]]]]`)","''()[]","``{}",'"[][["()',"(`)[]]`)",
-            "''`(((((((((((`","\\`()`[[[`",'"\\")("{}', "''''''"
-        ]
-
-        i=0
-        for test in strings_false:
-            if string_check_no_switch(test):
-                printError("Test (FALSE:"+str(i)+") échoué pour : \033[1m"+test)
-                return False
-            i+=1
-        i=0
-        for test in strings_true:
-            if not string_check_no_switch(test):
-                printError("Test (TRUE:"+str(i)+") échoué pour : \033[1m"+test)
-                return False
-            i+=1
-        printSuccess("\n____________________________________\n--- Tous les tests sont passés ! ---\n____________________________________")
-    else:
-        get_inp("Envoyez parenthèses et crochets : ")
-        string_check_no_switch(inp)
-
-def exercice14():
-    #get_inp("Envoyez parenthèses et crochets : ")
-    liste_reverse_middle=["a", "b", "c", "d"]
-    reverse_middle(liste_reverse_middle)
-
-def exercice15(tests=False):
-    if tests:
-        test_cases = {
-            "s" : ["aa", "aa", "ab", "aab", "ab", "aaa", "a", "mississippi", "bbbba", "ab", "bb", "bbab", "abbabaaaaaaacaa", "bcbabcaacacbcabac"],
-            "p" : ["a", "a*", ".*", "c*a*b", ".*c", "a*a", "ab*", "mis*is*p*.", ".*a*a", ".*..c*", ".bab", "b*a*", "a*.*b.a.*c*b*a*c*", "a*c*a*b*.*aa*c*a*a*"],
-            "expected_answer" : [False, True, True, True, False, True, True, False, True, True, False, False, True, True]
-            }
-        errors=False
-        for i in range(len(test_cases["s"])):
-            result=do_regex(test_cases["s"][i], test_cases["p"][i])
-            if result == test_cases["expected_answer"][i]:
-                printSuccess("Pattern "+test_cases["p"][i]+" (string : '"+test_cases["s"][i]+"') correct !")
-            else:
-                errors="Erreur sur le pattern "+test_cases["p"][i]+" (string : '"+test_cases["s"][i]+"'), renvoie "+str(result)+" au lieu de "+str(test_cases["expected_answer"][i])
-                break
-        if errors:
-            printError(errors)
+def sort_frequence(lettres):
+    #cnt = Counter(lettres)
+    cnt={}
+    for lettre in lettres:
+        if lettre not in cnt.keys():
+            cnt[lettre]=1
         else:
-            printSuccess("Les tests sont bien passés !")
-    else:
-        do_regex("abc","a*b*c*d*")
+            cnt.update({lettre: (cnt[lettre]+1)})
 
-def exercice16():
-    l1=[18,2,10]
-    l2=[20,8, 1, 7, 8]
-    sort_merge(l1, l2)
-# RUN
-# -------------------------------
-
-# exercice1()
-# exercice2()
-# exercice3()
-# exercice4()
-# exercice5()
-# exercice6()
-# exercice7()
-# exercice8()
-# exercice9()
-# exercice10()
-# exercice11()
-# exercice12()
-# exercice13(True)
-# exercice14()
-exercice15(True)
-# exercice16()
+    cnt={k: v for k, v in sorted(cnt.items(), key=lambda item: item[1])}
+    print(cnt)
+    return cnt
