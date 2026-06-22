@@ -581,27 +581,26 @@ def do_regex(string, pattern):
         match p:
             case "*":
                 previous_p=pattern[id-1]
-                if len(pattern)-1>id:
-                    next_p=pattern[id+1]
-                else:
-                    next_p=False
-                sub_reader=index_reader
-                print("while détecté : ",string[sub_reader] == previous_p, string[sub_reader]==".")
-                while string[sub_reader] == previous_p or string[sub_reader]==".":
-                    print("sub reader : ",sub_reader," Len string :",len(string))
-                    sub_reader+=1
-                    if sub_reader>=len(string):
-                        if not next_p:
+                if previous_p == string[index_reader]:
+                    while previous_p == string[index_reader]:
+                        index_reader+=1
+                        if len(string) >= index_reader:
                             return True
-                        else:
-                            print("Il reste de la regex, repositionement de index reader sur le prochain caractère regex")
-                            index_reader+=1
-                            print("Recherche dans la range ",index_reader,sub_reader)
-                            for i in range(index_reader,sub_reader):
-                                if string[i]==next_p:
-                                    print("next char trouvé dans index reader=",index_reader)
-                                else:
-                                    index_reader+=1
+
+                elif previous_p == ".":
+                    print("cas .* détecté !")
+                    if len(pattern)-1>id:
+                        next_p=pattern[id+1]
+                    else:
+                        print("aucun pattern après à tester, on peut renvoyer True")
+                        return True
+                    print("Il y a un pattern next_p:",next_p," qui détermine la fin du comptage")
+                    while not next_p == string[index_reader]:
+                        print("index reader :",index_reader)
+                        print(string[index_reader]," n'est pas ",next_p,"on incrémente et continue.")
+                        index_reader+=1
+                        if len(string) >= index_reader:
+                            return False
 
             case ".":
                 index_reader+=1
@@ -614,8 +613,8 @@ def do_regex(string, pattern):
                 index_reader+=1
         print()
 
-        # if index_reader>=len(string):
-        #     break
+        if index_reader>=len(string):
+            break
     ######
     if not index_reader == len(string):
         is_match=False
