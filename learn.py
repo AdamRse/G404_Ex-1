@@ -36,11 +36,6 @@ def diviser_nombres(a, b):
         # 4. Le bloc FINALLY (optionnel) : S'exécute TOUJOURS à la fin, qu'il y ait eu une erreur ou non
         print("--- Fin de la tentative ---\n")
 
-for i in range(25,40):
-    print("Pour i = " + str(i))
-    print(i / 26)
-
-a=5
-b=a
-b+=1
-print(a,b)
+import itertools
+for i, j in itertools.zip_longest(range(5), range(10)):
+    print(i, j)

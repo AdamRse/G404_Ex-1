@@ -1,3 +1,5 @@
+from logging import lastResort
+
 from head import *
 import datetime
 import math
@@ -550,8 +552,6 @@ def do_regex(string, pattern):
         print("DELIMITER : ", delimiters)
         return delimiters
 
-
-
     index_reader=0
     is_match=True
     skip_next=False
@@ -583,8 +583,6 @@ def do_regex(string, pattern):
                         print("aucun pattern après à tester, on peut renvoyer True")
                         return True
 
-
-                        ######
                     print("Il y a un pattern next_p:",next_p," qui détermine la fin du comptage")
 
                     demimitersAfterStar=patternsDelimiterAfterStar(id, pattern)
@@ -677,11 +675,22 @@ def test_all_scenarios_until_simple_pattern(p_list, id, string, index_reader): #
             if s == delimiter_p:
                 nb_occurence_delimiter_in_str+=1
 
+    sub_reader=index_reader
     if nb_occurence_delimiter_in_str==0: # Aucun démiliteur dans la string, il ne reste que des n* dans la string
-        pass
+        for s in string[index_reader:]:
+            if s not in star_letters_only:
+                return False
+        return len(string)-1
     elif nb_occurence_delimiter_in_str==1:# La string possède une unique occurence du délimiteur, on peur extraire le pattern à tester
-        pass
-    else:# Plusieurs délimiteur
+        for s in string[index_reader:]:
+            if s == delimiter_p:
+                return sub_reader+1
+            if s not in star_letters_only:
+                sub_reader+=1
+                return False
+        return sub_reader
+    else:# Plusieurs délimiteur, il faut tester pour caque occurence
+
         pass
 
 
@@ -770,3 +779,18 @@ def sort_frequence(lettres):
     cnt={k: v for k, v in sorted(cnt.items(), key=lambda item: item[1])}
     print(cnt)
     return cnt
+
+# Compression des caractères
+# -------------------------------
+def char_zip(text:str):
+    last_char=False
+    compressed_txt=""
+    print("texte reçu : ", text)
+    count=1
+    for c, nc in itertools.zip_longest(text, text[1:]):
+        if c == nc:
+            count+=1
+        else:
+            compressed_txt+=c+str(count) if count > 1 else c
+            count=1
+    print(compressed_txt)

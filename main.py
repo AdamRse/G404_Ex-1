@@ -127,7 +127,7 @@ def exercice15(tests=False):
             }
         errors=False
         for i in range(len(test_cases["s"])):
-            result=do_regex2(test_cases["s"][i], test_cases["p"][i])
+            result=do_regex(test_cases["s"][i], test_cases["p"][i])
             if result == test_cases["expected_answer"][i]:
                 printSuccess("Pattern "+test_cases["p"][i]+" (string : '"+test_cases["s"][i]+"') correct !")
             else:
@@ -138,7 +138,7 @@ def exercice15(tests=False):
         else:
             printSuccess("Les tests sont bien passés !")
     else:
-        do_regex2("abce","a*b*c*d*e.*")
+        do_regex("a","a*a")
 
 def exercice16():
     l1=[18,2,10]
@@ -148,6 +148,10 @@ def exercice16():
 def exercice17():
     lettres=["a", "b", "c", "a", "c", "c"]
     sort_frequence(lettres)
+
+def exercice18():
+    inp = input("Écrivez une phrase : ")
+    char_zip(inp)
 # RUN
 # -------------------------------
 
@@ -165,6 +169,7 @@ def exercice17():
 # exercice12()
 # exercice13(True)
 # exercice14()
-exercice15()
+exercice15(True)
 # exercice16()
 # exercice17()
+# exercice18()
