@@ -528,222 +528,8 @@ def reverse_middle(liste_reverse_middle):
 # Expression régulière
 # -------------------------------
 def do_regex(string, pattern):
-    def getNextPattern(id, patternString):
-        if len(patternString)-1>id:
-            return patternString[id+1]
-        else:
-            return False
-    def patternsDelimiterAfterStar(id, patternString): # A partir du pattern suivant
-        # On cherche le caractère sur (sans étoile derrière, puis ensuite on teste ceux avec les étoiles)
-        next_p=getNextPattern(id, patternString)
-        after_next_p=getNextPattern(id+1, patternString)
-        delimiters=[]
-        while next_p:
-            if next_p=="*":
-                id+=1
-            elif after_next_p=="*":
-                delimiters.append(next_p)
-                id+=2
-            else:
-                print("DELIMITER : Trouvé un pattern sans étoile ")
-                delimiters.insert(0, next_p)
-                break
-            next_p=getNextPattern(id, patternString)
-        print("DELIMITER : ", delimiters)
-        return delimiters
-
-    index_reader=0
-    is_match=True
-    skip_next=False
-    print("---------------------\nA tester : ",string, pattern)
-    for id, p in enumerate(pattern):
-        if skip_next:
-            skip_next=False
-            continue
-        print("String : "+string[index_reader],"(",index_reader,")\nPattern : "+p)
-
-        match p:
-            case "*":
-                previous_p=pattern[id-1]
-                if previous_p == string[index_reader]:
-                    print("cas *, on va calculer le nombre de ",previous_p," dans la string")
-                    while previous_p == string[index_reader]:
-                        print(previous_p,"=",string[index_reader]," index_reader : ",index_reader)
-                        index_reader+=1
-                        if len(string) <= index_reader:
-                            print("On sort de la string, index reader = ",index_reader, "et la taille de la string est : ",len(string))
-                            return True
-                        print("On passe l'index reader à ",index_reader,string[index_reader])
-                    print("On sort du wile avec la string : ",index_reader,string[index_reader])
-
-                elif previous_p == ".":
-                    printWrong("cas .* détecté !")
-                    next_p=getNextPattern(id, pattern)
-                    if not next_p:
-                        print("aucun pattern après à tester, on peut renvoyer True")
-                        return True
-
-                    print("Il y a un pattern next_p:",next_p," qui détermine la fin du comptage")
-
-                    demimitersAfterStar=patternsDelimiterAfterStar(id, pattern)
-                    print("Calcul du démimiteur à tester : ",demimitersAfterStar)
-                    while not next_p == string[index_reader] and next_p not in demimitersAfterStar:
-                        print("index reader :",index_reader)
-                        print(string[index_reader]," n'est pas ",next_p,"on incrémente et continue.")
-                        index_reader+=1
-                        next_p=getNextPattern(id, pattern)
-                        if len(string) >= index_reader:
-                            return False
-
-
-            case ".":
-                next_p=getNextPattern(id, pattern)
-                if not next_p:
-                    print("Il n'y a pas de patern ensuite, le . fonctionne pour tout, on sort de la boucle")
-                    break
-                if next_p == "*":
-                    print(".*, on le calculrera dans la boucle suivante, next, sans incrémenter index_reader")
-                else:
-                    index_reader+=1
-            case _:
-                if not p==string[index_reader]:
-                    print("On compare",p," n'est pas ",string[index_reader])
-                    next_p=getNextPattern(id, pattern)
-                    if not next_p:
-                        print("Le pattern ",p,"ne correspond pas à la string, et n'est pas annulé par une étoile, on peux renvoyer false")
-                        return False
-                    if not next_p == "*":
-                        print("Le pattern ",p,"ne correspond pas à la string, pas d'étoile derrière. FALSE")
-                        return False
-                    else:
-                        print("On a testé le prochain élément")
-                        skip_next=True
-                    print(p," est annulé par",next_p)
-                index_reader+=1
-        print()
-
-        if index_reader>=len(string):
-            print("Sortie de boucle : Détection index_reader >= len(string)",index_reader,len(string))
-            break
-    ######
-    if not index_reader == len(string):
-        print("index reader nest pas la longueur de la sting",index_reader,len(string))
-        return False
-    print(is_match)
-    return is_match
-
-## V2
-
-def listePatterns(pattern):
-    def getNextPattern(id, patternString):
-        if len(patternString)-1>id:
-            return patternString[id+1]
-        else:
-            return False
-    listPatterns=[]
-    for id, p in enumerate(pattern):
-        next_p=getNextPattern(id, pattern)
-        if next_p == "*":
-            listPatterns.append(p+next_p)
-        elif not p == "*":
-            listPatterns.append(p)
-    return listPatterns
-
-def get_next_single_pattern(p_list, id):
-    for p in p_list[id:]:
-        if len(p)==1:
-            return p
-    return False
-
-def test_tree(dictTree, pattern_starless, string, index_reader):
     pass
 
-def test_all_scenarios_until_simple_pattern(p_list, id, string, index_reader): # On doit tester tous les scénarios jusqu'au prochain simple pattern
-    max_id=len(p_list)-1
-    delimiter_p=False
-    star_letters_only=[]
-    for p in p_list[id:]:
-        if len(p)==2:
-            star_letters_only.append(p[0])
-        elif len(p)==1:
-            delimiter_p=p
-            break
-
-    nb_occurence_delimiter_in_str=0
-    if delimiter_p:
-        for s_id, s in enumerate(string[index_reader:]):
-            if s == delimiter_p:
-                nb_occurence_delimiter_in_str+=1
-
-    sub_reader=index_reader
-    if nb_occurence_delimiter_in_str==0: # Aucun démiliteur dans la string, il ne reste que des n* dans la string
-        for s in string[index_reader:]:
-            if s not in star_letters_only:
-                return False
-        return len(string)-1
-    elif nb_occurence_delimiter_in_str==1:# La string possède une unique occurence du délimiteur, on peur extraire le pattern à tester
-        for s in string[index_reader:]:
-            if s == delimiter_p:
-                return sub_reader+1
-            if s not in star_letters_only:
-                sub_reader+=1
-                return False
-        return sub_reader
-    else:# Plusieurs délimiteur, il faut tester pour caque occurence
-
-        pass
-
-
-    # sub_reader=index_reader
-    # for s_id, s in enumerate(string[index_reader:]):
-    #     for p_id, p in enumerate(p_list):
-    #         max_occurence=0
-    #         while p == s:
-    #             max_occurence+=1
-
-    #     sub_reader+=1
-
-    return index_reader
-
-def analyseSimplePattern(p, s):
-    return p==s or p == "."
-
-def test_only_stars_remaining(p_list, id):
-    for p in p_list:
-        if len(p)==1:
-            return False
-    return True
-
-def do_regex2(string, pattern):
-    p_list=listePatterns(pattern)
-    max_index_reader=len(string)-1
-    index_reader=0
-    skip_double_pattern=False
-    for id, p in enumerate(p_list):
-        if skip_double_pattern:
-            if len(p)==1:
-                skip_double_pattern=False
-            else:
-                continue
-        if index_reader >= max_index_reader:
-            return test_only_stars_remaining(p_list, id)
-
-
-        if len(p) == 1:
-            if analyseSimplePattern(p, string[index_reader]):
-                index_reader+=1
-            else:
-                return False
-        else: # On doit tester tous les scénarios jusqu'au prochain simple pattern
-            new_index=test_all_scenarios_until_simple_pattern(p_list, id, string, index_reader)
-            if new_index:
-                index_reader=new_index
-                skip_double_pattern=True
-            else:
-                return False
-
-
-    print(p_list)
 # Fusionner et trier 2 listes
 # -------------------------------
 def sort_merge(l1, l2):
@@ -799,8 +585,7 @@ def char_zip(text:str):
 # -------------------------------
 def bubbleSort(list:list, display=True):
     if display:
-        printWrong("Liste données : "+str(list))
-    minimum=False
+        printWrong("Liste données : "+str(list)+' ('+str(len(list))+')')
     decalage=0
     for id_n1, n1 in enumerate(list):
         minimum=[id_n1,n1]
@@ -810,7 +595,7 @@ def bubbleSort(list:list, display=True):
         list.pop(minimum[0])
         list.insert(id_n1,minimum[1])
         decalage+=1
-    printSuccess("Liste triée !\n"+str(list))
+    printSuccess("Liste triée !\n"+str(list)+' ('+str(len(list))+')')
 
 #
 # -------------------------------
