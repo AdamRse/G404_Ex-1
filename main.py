@@ -152,6 +152,10 @@ def exercice17():
 def exercice18():
     inp = input("Écrivez une phrase : ")
     char_zip(inp)
+
+def exercice19():
+    list=[2,7,1,88,67,4,10,29,27,74,55]
+    bubbleSort(list)
 # RUN
 # -------------------------------
 
@@ -169,7 +173,8 @@ def exercice18():
 # exercice12()
 # exercice13(True)
 # exercice14()
-exercice15(True)
+# exercice15(True)
 # exercice16()
 # exercice17()
 # exercice18()
+exercice19()

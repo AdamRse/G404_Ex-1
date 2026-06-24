@@ -794,3 +794,23 @@ def char_zip(text:str):
             compressed_txt+=c+str(count) if count > 1 else c
             count=1
     print(compressed_txt)
+
+# Bubble sort
+# -------------------------------
+def bubbleSort(list:list, display=True):
+    if display:
+        printWrong("Liste données : "+str(list))
+    minimum=False
+    decalage=0
+    for id_n1, n1 in enumerate(list):
+        minimum=[id_n1,n1]
+        for id_n2, n2 in enumerate(list[id_n1:]):
+            if minimum[1] > n2:
+                minimum=[decalage+id_n2,n2]
+        list.pop(minimum[0])
+        list.insert(id_n1,minimum[1])
+        decalage+=1
+    printSuccess("Liste triée !\n"+str(list))
+
+#
+# -------------------------------
