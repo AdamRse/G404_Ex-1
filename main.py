@@ -158,7 +158,7 @@ def exercice18():
     char_zip(inp)
 
 def exercice19():
-    list=[2,7,1,88,67,4,10,29,27,74,55]
+    list=[2,3,1,4,8,0]
     bubbleSort(list)
 
 def exercice20():
@@ -184,7 +184,7 @@ def exercice22():
 # exercice7()
 # exercice8()
 # exercice9()
-exercice10()
+# exercice10()
 # exercice11()
 # exercice12()
 # exercice13(True)
@@ -193,7 +193,7 @@ exercice10()
 # exercice16()
 # exercice17()
 # exercice18()
-# exercice19()
+exercice19()
 # exercice20()
 # exercice21()
 # exercice22()

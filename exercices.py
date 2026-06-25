@@ -599,16 +599,17 @@ def char_zip(text:str):
 def bubbleSort(list:list, display=True):
     if display:
         printWrong("Liste données : "+str(list)+' ('+str(len(list))+')')
-    decalage=0
+    rounds=0
     for id_n1, n1 in enumerate(list):
-        minimum=[id_n1,n1]
+        min_index=id_n1
         for id_n2, n2 in enumerate(list[id_n1:]):
-            if minimum[1] > n2:
-                minimum=[decalage+id_n2,n2]
-        list.pop(minimum[0])
-        list.insert(id_n1,minimum[1])
-        decalage+=1
-    printSuccess("Liste triée !\n"+str(list)+' ('+str(len(list))+')')
+            rounds+=1
+            if list[min_index] > n2:
+                min_index=id_n1+id_n2
+        if min_index == id_n1:
+            continue
+        list[min_index], list[id_n1] = list[id_n1], list[min_index]
+    printSuccess("Liste triée en "+str(rounds)+" rounds !\n"+str(list)+' ('+str(len(list))+')')
 
 # Inverser un entier
 # -------------------------------
