@@ -2,22 +2,16 @@ def is_match(s: str, p: str) -> bool:
     string_len=len(s)
     pattern_len=len(p)
     def match(index_string: int, index_pattern: int) -> bool:
-        # Cas de base : le pattern est épuisé
         if index_pattern == pattern_len:
             return index_string == string_len
 
-        # Le caractère courant de s correspond-il au pattern ?
         first_match = index_string < string_len and (p[index_pattern] == '.' or p[index_pattern] == s[index_string])
 
-        # Y a-t-il un '*' juste après ?
         if index_pattern + 1 < pattern_len and p[index_pattern + 1] == '*':
-            # Option 1 : 0 occurrence → on saute "x*" dans le pattern
-            # Option 2 : 1+ occurrence → on consomme un char de s (si ça matche)
             return match(index_string, index_pattern + 2) or (first_match and match(index_string + 1, index_pattern))
         else:
             # Simple pattern, 1 char = 1 p
             return first_match and match(index_string + 1, index_pattern + 1)
-
     return match(0, 0)
 
 test_cases = {

@@ -71,7 +71,11 @@ def exercice10():
     #     marge = 0
     #draw_triangle(taille, int(marge))
     #draw_triangle_no_while(taille, int(marge))
-    infinite_triangle()
+    inp = input("Entrez un caractère : ")
+    while len(inp)>1:
+        printError("Il faut un seul caractère !")
+        inp = input("Entrez un caractère : ")
+    infinite_triangle(inp)
 
 def exercice11():
     #get_inp("Donnez un mot : ")
@@ -180,7 +184,7 @@ def exercice22():
 # exercice7()
 # exercice8()
 # exercice9()
-# exercice10()
+exercice10()
 # exercice11()
 # exercice12()
 # exercice13(True)
@@ -192,31 +196,4 @@ def exercice22():
 # exercice19()
 # exercice20()
 # exercice21()
-exercice22()
-
-# -------------------------
-dict_unitaire={1:"I", 4:"IV", 5:"V", 9:"IX", 10:"X", 40:"XL", 50:"L", 90:"XC", 100:"C", 400:"CD", 500:"D", 900:"DM", 1000:"M"}
-dict_read=dict(dict_unitaire)
-find=99
-num_rom=""
-
-def get_next_unit(chiffre_romain:str):
-    found_rom=False
-    for num_dec in dict_unitaire:
-        if found_rom:
-            return dict_unitaire[num_dec]
-        if dict_unitaire[num_dec] == chiffre_romain:
-            found_rom=True
-    return chiffre_romain
-
-while find > 0:
-    biggest_divisor=max(dict_read)
-    biggest_rom=find // biggest_divisor
-    rest_rom=find % biggest_divisor
-    while biggest_rom > 0:
-        num_rom+=dict_read[biggest_divisor]
-        biggest_rom-=1
-    del dict_read[biggest_divisor]
-    find=rest_rom
-print(num_rom)
-# ------ CLAUDE -------
+# exercice22()

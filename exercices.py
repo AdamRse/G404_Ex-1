@@ -351,7 +351,7 @@ def draw_triangle_no_while(taille, margin=1):
 
     print(tree+bcolors.ENDC)
 
-def infinite_triangle(max_width=math.trunc(os.get_terminal_size().columns/2), min_width=1):
+def infinite_triangle(char="@", max_width=math.trunc(os.get_terminal_size().columns/2), min_width=1):
     i=min_width
     increase=True
     colorStart=""
@@ -359,7 +359,7 @@ def infinite_triangle(max_width=math.trunc(os.get_terminal_size().columns/2), mi
     colors=[bcolors.FAIL,bcolors.OKBLUE,bcolors.OKCYAN,bcolors.OKGREEN,bcolors.WARNING]
     while True:
         # max_width=math.trunc(os.get_terminal_size().columns/2) # En cas de redimentionement du terminal
-        print(colorStart + ("@"*(i*2-1)).center(max_width*2) + colorStop)
+        print(colorStart + ((char)*(i*2-1)).center(max_width*2) + colorStop)
 
         if i<=min_width:
             increase=True
@@ -527,8 +527,21 @@ def reverse_middle(liste_reverse_middle):
 
 # Expression régulière
 # -------------------------------
-def do_regex(string, pattern):
-    pass
+def do_regex(s, p):
+    string_len=len(s)
+    pattern_len=len(p)
+    def match(index_string: int, index_pattern: int) -> bool:
+        if index_pattern == pattern_len:
+            return index_string == string_len
+
+        first_match = index_string < string_len and (p[index_pattern] == '.' or p[index_pattern] == s[index_string])
+
+        if index_pattern + 1 < pattern_len and p[index_pattern + 1] == '*':
+            return match(index_string, index_pattern + 2) or (first_match and match(index_string + 1, index_pattern))
+        else:
+            # Simple pattern, 1 char = 1 p
+            return first_match and match(index_string + 1, index_pattern + 1)
+    return match(0, 0)
 
 # Fusionner et trier 2 listes
 # -------------------------------
@@ -609,7 +622,7 @@ def inverse_un_entier(nombre:int):
 
     return int(reverse_nombre)
 
-# Traduction chiffres romains
+# Chriffres romains vers décimaux
 # -------------------------------
 def nombre_romains_vers_decimal(nombre_r:str, display=True) -> int:
     nombre_r = nombre_r.upper()
@@ -654,13 +667,22 @@ def nombre_romains_vers_decimal(nombre_r:str, display=True) -> int:
         printSuccess(nombre_r+" > "+str(result))
     return result
 
+# Décimaux vers Chiffres romains
+# -------------------------------
 def decimal_vers_nombre_romain(nombre_r:int, display=True) -> str|bool:
+    if type(nombre_r) is not int:
+        if display:
+            printError("Le nombre romain passé n'est pas un nombre entier ("+str(nombre_r)+")")
+        return False
+    if nombre_r > 3999 or nombre_r < 1:
+        if display:
+            printError("Le nombre romain doit être compris entre 1 et 3999")
+        return False
+
     dict_unitaire={1:"I", 4:"IV", 5:"V", 9:"IX", 10:"X", 40:"XL", 50:"L", 90:"XC", 100:"C", 400:"CD", 500:"D", 900:"DM", 1000:"M"}
     dict_read=dict(dict_unitaire)
-    find=99
     num_rom=""
-    if nombre_r > 3999:
-        return False
+    find=nombre_r
     while find > 0:
         biggest_divisor=max(dict_read)
         biggest_rom=find // biggest_divisor
@@ -671,5 +693,5 @@ def decimal_vers_nombre_romain(nombre_r:int, display=True) -> str|bool:
         del dict_read[biggest_divisor]
         find=rest_rom
     if display:
-        print(num_rom)
+        printSuccess(str(nombre_r)+" > "+num_rom)
     return num_rom
