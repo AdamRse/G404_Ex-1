@@ -597,5 +597,79 @@ def bubbleSort(list:list, display=True):
         decalage+=1
     printSuccess("Liste triée !\n"+str(list)+' ('+str(len(list))+')')
 
-#
+# Inverser un entier
 # -------------------------------
+def inverse_un_entier(nombre:int):
+    if type(nombre) is not int: return False
+
+    nombre_string = str(nombre)
+    reverse_nombre = nombre_string[::-1]
+    if reverse_nombre[-1] == '-':
+        reverse_nombre = '-'+reverse_nombre[:-1]
+
+    return int(reverse_nombre)
+
+# Traduction chiffres romains
+# -------------------------------
+def nombre_romains_vers_decimal(nombre_r:str, display=True) -> int:
+    nombre_r = nombre_r.upper()
+    dict_unitaire={"I":1, "V":5, "X":10, "L":50, "C":100, "D":500, "M":1000}
+
+    # calcul des patterns d'addition
+    def get_patterns(chiffre:str) -> list:
+        patterns=[]
+        line=""
+        for n, n2 in itertools.zip_longest(chiffre, chiffre[1:]):
+            if not n2:
+                patterns.append(line+n)
+                break
+            if dict_unitaire[n] >= dict_unitaire[n2]:
+                patterns.append(line+n)
+                line=""
+            else:
+                line+=n
+        return patterns
+
+    # fiare la somme des chiffres
+    def val_pattern(liste_pattern: list) -> int:
+        somme = 0
+        for lettre in liste_pattern:
+            tmp_somme = 0
+            if len(lettre) > 1: ## Pour les lettre plus petit I et V
+                tmp_nombre = dict_unitaire[lettre[0]]
+                for char in lettre:
+                    if tmp_nombre < dict_unitaire[char]:
+                        tmp_somme =  dict_unitaire[char] - tmp_nombre
+                    else:
+                        tmp_somme =  dict_unitaire[char] + tmp_nombre
+                somme += tmp_somme
+            else:
+                somme += dict_unitaire[lettre]
+        return somme
+
+
+    liste_pattern = get_patterns(nombre_r)
+    result = val_pattern(liste_pattern)
+    if display:
+        printSuccess(nombre_r+" > "+str(result))
+    return result
+
+def decimal_vers_nombre_romain(nombre_r:int, display=True) -> str|bool:
+    dict_unitaire={1:"I", 4:"IV", 5:"V", 9:"IX", 10:"X", 40:"XL", 50:"L", 90:"XC", 100:"C", 400:"CD", 500:"D", 900:"DM", 1000:"M"}
+    dict_read=dict(dict_unitaire)
+    find=99
+    num_rom=""
+    if nombre_r > 3999:
+        return False
+    while find > 0:
+        biggest_divisor=max(dict_read)
+        biggest_rom=find // biggest_divisor
+        rest_rom=find % biggest_divisor
+        while biggest_rom > 0:
+            num_rom+=dict_read[biggest_divisor]
+            biggest_rom-=1
+        del dict_read[biggest_divisor]
+        find=rest_rom
+    if display:
+        print(num_rom)
+    return num_rom
