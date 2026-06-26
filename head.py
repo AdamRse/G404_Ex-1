@@ -13,7 +13,6 @@ sys.set_int_max_str_digits(0)
 inp = ""
 inp2 = ""
 
-
 class bcolors:
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
@@ -30,11 +29,9 @@ def get_inp(msg):
     global inp
     inp = input(msg)
 
-
 def get_inp2(msg):
     global inp2
     inp2 = input(msg)
-
 
 def printError(msg):
     print(bcolors.FAIL + msg + bcolors.ENDC)
@@ -42,7 +39,6 @@ def printError(msg):
 
 def printSuccess(msg):
     print(bcolors.OKGREEN + msg + bcolors.ENDC)
-
 
 def printWrong(msg):
     print(bcolors.WARNING + msg + bcolors.ENDC)

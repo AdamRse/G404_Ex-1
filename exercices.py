@@ -1,9 +1,7 @@
-from logging import lastResort
-
 from head import *
 import datetime
 import math
-from operator import index
+from operator import index, mul
 from pydoc import text
 import re
 import sys
@@ -600,7 +598,7 @@ def bubbleSort(list:list, display=True):
     if display:
         printWrong("Liste données : "+str(list)+' ('+str(len(list))+')')
     rounds=0
-    for id_n1, n1 in enumerate(list):
+    for id_n1 in range(len(list)-1):
         min_index=id_n1
         for id_n2, n2 in enumerate(list[id_n1:]):
             rounds+=1
@@ -680,8 +678,7 @@ def decimal_vers_nombre_romain(nombre_r:int, display=True) -> str|bool:
             printError("Le nombre romain doit être compris entre 1 et 3999")
         return False
 
-    dict_unitaire={1:"I", 4:"IV", 5:"V", 9:"IX", 10:"X", 40:"XL", 50:"L", 90:"XC", 100:"C", 400:"CD", 500:"D", 900:"DM", 1000:"M"}
-    dict_read=dict(dict_unitaire)
+    dict_read={1:"I", 4:"IV", 5:"V", 9:"IX", 10:"X", 40:"XL", 50:"L", 90:"XC", 100:"C", 400:"CD", 500:"D", 900:"DM", 1000:"M"}
     num_rom=""
     find=nombre_r
     while find > 0:
@@ -696,3 +693,89 @@ def decimal_vers_nombre_romain(nombre_r:int, display=True) -> str|bool:
     if display:
         printSuccess(str(nombre_r)+" > "+num_rom)
     return num_rom
+
+# Trouver le plus grand conteneur
+# -------------------------------
+def biggest_container(containers:list, display=True):
+
+    biggestArea={
+        "mur1":0,
+        "mur2":0,
+        "taille":0,
+        "area":0
+    }
+
+    for c1_id in range(len(containers)):
+        for c2_id, c2 in enumerate(containers[c1_id+1:]):
+            c2_id=c1_id+c2_id+1
+            taille=c2 if containers[c1_id]>c2 else containers[c1_id]
+            area=taille * (c2_id-c1_id)
+            if area > biggestArea["area"]:
+                biggestArea.update({
+                    "mur1":c1_id,
+                    "mur2":c2_id,
+                    "taille":taille,
+                    "area":area
+                })
+    if display:
+        printSuccess(
+            "Le plus grand conteneur se fait avec "
+            + str(containers[biggestArea["mur1"]])+"("+str(biggestArea["mur1"])+") et "+str(containers[biggestArea["mur2"]])+"("+str(biggestArea["mur2"])+")"
+            + "\nL'aire est de : "+str(biggestArea["area"])
+        )
+        printSuccess(drawContainer(containers[biggestArea["mur1"]],containers[biggestArea["mur2"]]))
+    return biggestArea["area"]
+
+def biggest_container_optimized(containers:list, display=True):
+    bot_reader=0
+    top_reader=len(containers)-1
+    bot=0
+    top=0
+    biggest_area=0
+    bot_index=False
+    top_index=False
+    while bot_reader < top_reader:
+        if bot < top:
+            bot=containers[bot_reader]
+            bot_index=bot_reader
+            bot_reader+=1
+        else:
+            top=containers[top_reader]
+            top_index=top_reader
+            top_reader-=1
+
+        # Calcul de l'aire
+        wallSize=bot if bot < top else top
+        floorSize=top_index-bot_index
+        area=wallSize*floorSize
+
+        # Test de l'aire
+        if area>biggest_area:
+            biggest_area=area
+    return biggest_area
+
+
+def drawContainer(longueur,largeur):
+    string=''
+    for lo in range(longueur):
+        if lo == 0:
+            string+="┌"
+        elif lo == longueur-1:
+            string+="└"
+        else:
+            string+="┆"
+        for _ in range(largeur):
+            if lo == 0 or lo == longueur-1:
+                string+="┄┄"
+            else:
+                string+=":D"
+        if lo == 0:
+            string+="┐"
+        elif lo == longueur-1:
+            string+="┘"
+        else:
+            string+="┆"
+        string += "\n"
+    return string
+
+#drawContainer(10,70)

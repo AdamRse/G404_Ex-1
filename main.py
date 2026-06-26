@@ -172,6 +172,52 @@ def exercice21():
 def exercice22():
     inp = input("Entrez un chiffre décimal : ")
     decimal_vers_nombre_romain(int(inp))
+
+def exercice23(tests=False):
+    if tests:
+        test_list1 = [4171, 3698, 3525, 3150, 3948, 4032, 3569, 3784, 3510, 3212, 3861, 3696, 3652, 3116, 4230, 3276, 3321, 3696, 3936]
+        test_list2 = [247774972, 247481270, 246937264, 246039300, 246955500, 245886776, 246861669, 247411426, 248106755, 248297709,
+                    244425709, 246755586, 246169628, 246567590, 248227550, 246172056, 246118294, 247550989, 245374022, 247424914,
+                    246765022, 246366021, 246273920]
+
+        print("Lancement du calcul.")
+        for i in range(1, 20):
+            random.seed(i)
+            test = [random.randint(0, 100) for _ in range(50)]
+            result = biggest_container_optimized(test, False)
+            if result == test_list1[i-1]:
+                printSuccess("Test "+str(i)+" passé.")
+            else:
+                printError("Test 1 : Mauvais résultat pour l'itération "+str(i)
+                    + "\nTrouvé : "
+                    + str(result)+"m²"
+                    + "\nAttendu :" + str(test_list1[i-1]))
+                sys.exit("Arrêt du programme")
+
+        print("Calculs longs :")
+        for i in range(20, 43):
+            start_time = time.time()
+            random.seed(i)
+            test = [random.randint(0, 10000) for _ in range(25000)]
+            result = biggest_container_optimized(test, False)
+            if result == test_list2[i-20]:
+                time_calcul = datetime.timedelta(seconds=(time.time() - start_time))
+                printSuccess("Test "+str(i)+" passé en "+str(time_calcul))
+            else:
+                printError("Test 1 : Mauvais résultat pour l'itération "+str(i)
+                    + "\nTrouvé : "
+                    + str(result)+"m²"
+                    + "\nAttendu :" + str(test_list2[i-20]))
+                sys.exit("Arrêt du programme")
+        print("Fini !")
+    else:
+        tableau=[2,1,7,9,4,2,5]
+
+        print(tableau)
+        print("Normal : "+str(biggest_container(tableau, False)))
+        print("Opti : "+str(biggest_container_optimized(tableau, False)))
+
+
 # RUN
 # -------------------------------
 
@@ -193,7 +239,8 @@ def exercice22():
 # exercice16()
 # exercice17()
 # exercice18()
-exercice19()
+# exercice19()
 # exercice20()
 # exercice21()
 # exercice22()
+exercice23(True)
