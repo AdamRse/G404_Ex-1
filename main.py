@@ -212,7 +212,6 @@ def exercice23(tests=False):
         print("Fini !")
     else:
         tableau=[2,1,7,9,4,2,5]
-
         print(tableau)
         print("Normal : "+str(biggest_container(tableau, False)))
         print("Opti : "+str(biggest_container_optimized(tableau, False)))
