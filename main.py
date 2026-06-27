@@ -114,7 +114,7 @@ def exercice13(tests=False):
             i+=1
         printSuccess("\n____________________________________\n--- Tous les tests sont passés ! ---\n____________________________________")
     else:
-        get_inp("Envoyez parenthèses et crochets : ")
+        inp=input("Envoyez parenthèses et crochets : ")
         string_check_no_switch(inp)
 
 def exercice14():
@@ -216,7 +216,6 @@ def exercice23(tests=False):
         print("Normal : "+str(biggest_container(tableau, False)))
         print("Opti : "+str(biggest_container_optimized(tableau, False)))
 
-
 # RUN
 # -------------------------------
 
@@ -232,7 +231,7 @@ def exercice23(tests=False):
 # exercice10()
 # exercice11()
 # exercice12()
-# exercice13(True)
+exercice13(True)
 # exercice14()
 # exercice15(True)
 # exercice16()
@@ -242,4 +241,4 @@ def exercice23(tests=False):
 # exercice20()
 # exercice21()
 # exercice22()
-exercice23(True)
+# exercice23(True)

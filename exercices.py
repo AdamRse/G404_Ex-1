@@ -498,7 +498,7 @@ def string_check_no_switch(string):
 
         if letter in open_close[::2]:
             pile.append(letter)
-        if letter in open_close[1::2]:
+        elif letter in open_close[1::2]:
             if len(pile) == 0:
                 conforme=False
                 break
