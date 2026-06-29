@@ -1,6 +1,6 @@
 #!/bin/bash
 source .venv/bin/activate
-file="main.py"
+file="main-numpy.py"
 [[ -n $1 ]] && file=$1
 clear
-ls exercices.py main.py regex.py | entr -c python $file
+ls main-numpy.py numpy_exercices.py | entr sh -c "clear && python $file"
