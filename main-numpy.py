@@ -34,6 +34,24 @@ def exercice2():
     print(f"Note entre 8 et 12 : {notes[(notes >= 8) & (notes <= 12)]}")
     print(f"Nombre d'étudiants en échec (<10) : {notes[notes < 10].size}")
 
+# Opérations et ufuncs
+def exercice3():
+    rng = np.random.default_rng(42)
+    notes = rng.normal(12, 3, 20).round(1)  # 20 notes, moyenne 12, écart 3
+    orininal=notes
+    print("Notes de la promo :", notes, "\n----")
+    # ------------------
+    print(f"Moyenne : {notes.sum() / notes.size}\n----")
 
-activate_exercice = [2]
+    notes=np.clip(np.add(notes, 0.5), 0, 20)
+    print(f"0.5 bonus à chacun : {notes}\n----")
+
+    notes=np.clip(notes * 1.1, 0, 20)
+    print(f"Majoration : {notes}\n----")
+
+    print(f"Écart bonus : {np.clip(notes - orininal, 0, 20)}")
+
+
+
+activate_exercice = [3]
 main(activate_exercice)
