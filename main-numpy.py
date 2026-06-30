@@ -98,7 +98,7 @@ def exercice5():
     print(f"Nombre d'élèves ayant la moyenne : {np.sum(reshaped.mean(axis=1) >= 10)}")
     print(f"Indice des 3 meilleurs élèves : {np.argsort(reshaped.mean(axis=1), axis=None)[-3:]}")
     print((reshaped >= 15))
-    print(f"Élève >=15 à la 3ème évaluation : {np.argwhere(np.where(reshaped >= 15))}")
+    print(f"Élève >=15 à la 3ème évaluation : {np.where(reshaped[:,2] >= 15)[0]+1}")
     # 8. Quels apprenants ont eu >= 15 à l'évaluation 3 ?
     # 9. Créer un masque pour les apprenants ayant TOUTES les notes >= 8
     # 10. Bonus de 2 points sur les notes inférieures a 8 uniquement
