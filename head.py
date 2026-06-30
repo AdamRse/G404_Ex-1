@@ -34,14 +34,13 @@ def get_inp2(msg):
     inp2 = input(msg)
 
 def printError(msg):
-    print(bcolors.FAIL + msg + bcolors.ENDC)
-
+    print(bcolors.FAIL, msg, bcolors.ENDC)
 
 def printSuccess(msg):
-    print(bcolors.OKGREEN + msg + bcolors.ENDC)
+    print(bcolors.OKGREEN, msg, bcolors.ENDC)
 
 def printWrong(msg):
-    print(bcolors.WARNING + msg + bcolors.ENDC)
+    print(bcolors.WARNING, msg, bcolors.ENDC)
 
 def del_accents(texte):
     accent = ['é', 'è', 'ê', 'à', 'ù', 'û', 'ç', 'ô', 'î', 'ï', 'â']
