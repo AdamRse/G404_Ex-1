@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.ma.extras import column_stack
 from numpy_exercices import * # NOQA
 from head import printSuccess, printError, printWrong, bcolors # NOQA
 
@@ -89,24 +90,43 @@ def exercice5():
     print(eval3)
     print(eval4)
 
-    reshaped=np.column_stack((eval1,eval2,eval3,eval4))
-    print(f"Matrice 25x4 : {reshaped}")
-    print(f"Dimension de la matrice : {reshaped.shape}")
-    print(f"Moyenne générale : {reshaped.mean()}\nÉcart type : {reshaped.std()}\nNote minimale : {reshaped.min()}\nNote maximale : {reshaped.max()}")
-    print(f"Moyenne par évaluations : {reshaped.mean(axis=0)}\nMédianes : {np.median(reshaped, axis=0)}\nMinimales : {np.min(reshaped, axis=0)}\nMaximale : {np.max(reshaped, axis=0)}")
-    print(f"Moyenne par élèves : {reshaped.mean(axis=1)}")
-    print(f"Nombre d'élèves ayant la moyenne : {np.sum(reshaped.mean(axis=1) >= 10)}")
-    print(f"Indice des 3 meilleurs élèves : {np.argsort(reshaped.mean(axis=1), axis=None)[-3:]}")
-    print((reshaped >= 15))
-    print(f"Élève >=15 à la 3ème évaluation : {np.where(reshaped[:,2] >= 15)[0]+1}")
-    # 8. Quels apprenants ont eu >= 15 à l'évaluation 3 ?
-    # 9. Créer un masque pour les apprenants ayant TOUTES les notes >= 8
-    # 10. Bonus de 2 points sur les notes inférieures a 8 uniquement
-    # 11. Bonus de 5 points sur l'évaluation 1 (plafonné à 20)
-    # 12. Appliquer la normalisation Min-Max sur les notes de l'évaluation 1
-    # 13. Standardiser les notes de l'évaluation 2
-    # 14. Afficher un array de la meilleure note dans chaque matiere entre les 10 meilleurs eleves de la classe
-    #
+    separateur="\n"+('-'*50)+"\n\n"
+
+    notes=np.column_stack((eval1,eval2,eval3,eval4))
+    print(f"Matrice 25x4 :\n{notes}", end=separateur)
+    print(f"Dimension de la matrice : {notes.shape}", end=separateur)
+    print(f"Moyenne générale : {notes.mean()}\nÉcart type : {notes.std()}\nNote minimale : {notes.min()}\nNote maximale : {notes.max()}", end=separateur)
+    print(f"Moyenne par évaluations : {notes.mean(axis=0)}\nMédianes : {np.median(notes, axis=0)}\nMinimales : {np.min(notes, axis=0)}\nMaximale : {np.max(notes, axis=0)}", end=separateur)
+    print(f"Moyenne par élèves : {notes.mean(axis=1)}", end=separateur)
+    print(f"Nombre d'élèves ayant la moyenne : {np.sum(notes.mean(axis=1) >= 10)}", end=separateur)
+    print(f"Indice des 3 meilleurs élèves : {np.argsort(notes.mean(axis=1))[-3:]} avec sort(), ou {np.argpartition(notes.mean(axis=1),-3)[-3:]} avec partition()", end=separateur) # Plus rapide avec argpartition() : La position sélectionnée (-3) contient le même chiffre et son argument qu'avec sort. A gauche tous les chiffre sont <=, et droite ils sont >=. L'ordre à gauche et à droite est indéfini
+    print(f"Élève >=15 à la 3ème évaluation : {np.where(notes[:,2] >= 15)[0]+1}", end=separateur)
+    print(f"Élèves n'ayant pas de notes < 8 : {np.where(np.all(notes >= 8, axis=1))[0]}", end=separateur)
+
+    notes=np.where(notes < 8, notes+2, notes)
+    print(f"+2 points pour les notes < 8 :\n{notes}", end=separateur)
+
+    notes[:,0]=notes[:,0]+5
+    notes=notes.clip(0,20)
+    print(f"+5 points sur l'évaluation 1 :\n{notes}", end=separateur)
+
+    notesFinales=notes.copy()
+    notes[:,0]=(notes[:,0] - notes[:,0].min()) / (notes[:,0].max() - notes[:,0].min())
+    print(f"Normalisation de l'éval 1 :\n{notes}", end=separateur) # Xnorm = ( X - Xmin) / (Xmax - Xmin)
+
+    moyenne2=np.mean(notes[:,1])
+    ecartType2=np.std(notes[:,1])
+    print(f"Moyenne colonne 2 : {moyenne2}\nécard type colonne 2 : {ecartType2}")
+    notes[:,1]=((notes[:,1] - moyenne2) / ecartType2)
+    print(f"Standadisation de l'éval 2 :\n{notes}", end=separateur) # Xstd = (X - moyenne) / écart type
+
+    argtop10=np.argpartition(notesFinales.mean(axis=1), -10)[-10:]
+    print(f"Arguments du top 10 :\n{argtop10}")
+    notesTop10=notesFinales[argtop10,:]
+    print(f"Notes du top 10 :\n{notesTop10}")
+    bestNoteTop10=notesTop10.max(axis=1)
+    print(f"Meilleures notes du top 10 :\n{bestNoteTop10}")
+
     # axis 0=vertical
     # axis 1=horizontal
 
