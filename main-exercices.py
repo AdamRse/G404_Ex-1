@@ -1,5 +1,5 @@
-from head import *
-from exercices import *
+from header.head import *
+from src.exercices import *
 
 
 def exercice1():

@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.ma.extras import column_stack
 from numpy_exercices import * # NOQA
-from head import printSuccess, printError, printWrong, bcolors # NOQA
+from header.head import printSuccess, printError, printWrong, bcolors # NOQA
 
 # Cours : https://github.com/G404-Data-Analyst/Formation_Data_Analyst/blob/main/numpy_et_pandas_cours.ipynb
 
