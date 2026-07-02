@@ -1,7 +1,6 @@
 import numpy as np
 from numpy.ma.extras import column_stack
-from numpy_exercices import * # NOQA
-from header.head import printSuccess, printError, printWrong, bcolors # NOQA
+from src.header.head import printSuccess, printError, printWrong, bcolors # NOQA
 
 # Cours : https://github.com/G404-Data-Analyst/Formation_Data_Analyst/blob/main/numpy_et_pandas_cours.ipynb
 
@@ -100,10 +99,10 @@ def exercice5():
     print(f"Moyenne par élèves : {notes.mean(axis=1)}", end=separateur)
     print(f"Nombre d'élèves ayant la moyenne : {np.sum(notes.mean(axis=1) >= 10)}", end=separateur)
     print(f"Indice des 3 meilleurs élèves : {np.argsort(notes.mean(axis=1))[-3:]} avec sort(), ou {np.argpartition(notes.mean(axis=1),-3)[-3:]} avec partition()", end=separateur) # Plus rapide avec argpartition() : La position sélectionnée (-3) contient le même chiffre et son argument qu'avec sort. A gauche tous les chiffre sont <=, et droite ils sont >=. L'ordre à gauche et à droite est indéfini
-    print(f"Élève >=15 à la 3ème évaluation : {np.where(notes[:,2] >= 15)[0]+1}", end=separateur)
+    print(f"Élève >=15 à la 3ème évaluation : {np.where(notes[:,2] >= 15)[0]+1}", end=separateur) # Where est une exeption en renvoie l'indice
     print(f"Élèves n'ayant pas de notes < 8 : {np.where(np.all(notes >= 8, axis=1))[0]}", end=separateur)
 
-    notes=np.where(notes < 8, notes+2, notes)
+    notes=np.where(notes < 8, notes+2, notes) # Ou : notes[notes < 8] += 2
     print(f"+2 points pour les notes < 8 :\n{notes}", end=separateur)
 
     notes[:,0]=notes[:,0]+5
@@ -130,6 +129,58 @@ def exercice5():
     # axis 0=vertical
     # axis 1=horizontal
 
+def exercice6():
+    rng = np.random.default_rng(42)
+
+    # Données de base : 7 jours de la semaine, 3 produits (A, B, C)
+    produits = ["Produit A", "Produit B", "Produit C"]
+    jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+
+    # 1. Matrice des quantités vendues (7 jours x 3 produits) entre 0 et 15 unités
+    ventes = rng.integers(0, 16, (7, 3))
+    print("=== QUANTITÉS VENDUES ===")
+    print(ventes)
+    print("-" * 50)
+
+    # 2. Vecteur des prix unitaires pour chaque produit (A: 10€, B: 25€, C: 50€)
+    prix = np.array([10, 25, 50])
+
+    # ---- À TOI DE COMPLÉTER LES OPÉRATIONS SUIVANTES ----
+
+    # A. Calculer le chiffre d'affaires (CA) quotidien de chaque jour (7 jours)
+    # INDICE : Multiplier les ventes par les prix (Produit matriciel ou somme pondérée)
+    ca_quotidien = ventes @ prix  # Ou np.dot(ventes, prix)
+    print(f"Chiffre d'affaires par jour :\n{dict(zip(jours, ca_quotidien))}")
+    print("-" * 50)
+
+    # B. Calculer le Chiffre d'Affaires cumulé tout au long de la semaine (Évolution)
+    # FONCTION À UTILISER : np.cumsum()
+    ca_cumule = np.cumsum(ca_quotidien)
+    print(f"Évolution du CA cumulé : {ca_cumule}")
+    print("-" * 50)
+
+    # C. Trouver le jour où le Chiffre d'Affaires a été le plus élevé
+    meilleur_jour_idx = np.argmax(ca_quotidien)
+    print(f"Le meilleur jour de la semaine est le {jours[meilleur_jour_idx]} avec {ca_quotidien[meilleur_jour_idx]}€")
+    print("-" * 50)
+
+    # D. Identifier s'il y a eu des jours de "rupture" pour AU MOINS un produit (0 vente)
+    # FONCTIONS À UTILISER : np.any() sur l'axe horizontal
+    jours_rupture_masque = np.any(ventes == 0, axis=1)
+    indices_jours_rupture = np.where(jours_rupture_masque)[0]
+    jours_rupture = [jours[i] for i in indices_jours_rupture]
+    print(f"Jours avec au moins une rupture de stock (0 vente) : {jours_rupture}")
+    print("-" * 50)
+
+    # E. Restructuration et Ajout de données (Concaténation)
+    # Imaginons les ventes d'un 8ème jour (Nouvelle journée de ventes pour les 3 produits)
+    ventes_jour8 = np.array([12, 5, 9])
+    # FONCTION À UTILISER : np.vstack() pour ajouter une ligne à la matrice existante
+    ventes_totale = np.vstack((ventes, ventes_jour8))
+    print(f"Nouvelle forme de la matrice après ajout du Jour 8 : {ventes_totale.shape}")
+
+    print("TEST",[x for x in range(10)])
+
 #  MAIN --------------
-activate_exercice = [5]
+activate_exercice = [6]
 main(activate_exercice)
