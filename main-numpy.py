@@ -1,5 +1,4 @@
 import numpy as np
-from numpy.ma.extras import column_stack
 from src.header.head import printSuccess, printError, printWrong, bcolors # NOQA
 
 # Cours : https://github.com/G404-Data-Analyst/Formation_Data_Analyst/blob/main/numpy_et_pandas_cours.ipynb
@@ -123,7 +122,7 @@ def exercice5():
     print(f"Arguments du top 10 :\n{argtop10}")
     notesTop10=notesFinales[argtop10,:]
     print(f"Notes du top 10 :\n{notesTop10}")
-    bestNoteTop10=notesTop10.max(axis=1)
+    bestNoteTop10=notesTop10.max(axis=0)
     print(f"Meilleures notes du top 10 :\n{bestNoteTop10}")
 
     # axis 0=vertical
@@ -182,5 +181,5 @@ def exercice6():
     print("TEST",[x for x in range(10)])
 
 #  MAIN --------------
-activate_exercice = [6]
+activate_exercice = [5]
 main(activate_exercice)
