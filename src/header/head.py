@@ -53,3 +53,13 @@ def del_accents(texte):
         except ValueError:
             output+=lettre
     return output
+
+def main(activate_exercice, context):
+    for nb in activate_exercice:
+        nom_fonction = f"exercice{nb}"
+
+        # On cherche dans le contexte passé en paramètre
+        if nom_fonction in context:
+            context[nom_fonction]()
+        else:
+            print(f"⚠️ L'exercice {nb} n'existe pas.")
