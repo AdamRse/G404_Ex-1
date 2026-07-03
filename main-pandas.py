@@ -72,7 +72,7 @@ def exercice3():
     # 1. Sélectionner la colonne 'tip' comme une Series
     print(f"(1) Série colonne 'tip' :\n{df["tip"]}", end=ps) # Renvoie une liste, tandis que df[["tip"]] renvoie une série
     # 2. Sélectionner les colonnes 'total_bill' et 'day' comme un DataFrame
-    print(f"(2) Colonnes 'total_bill' et 'day' dans un DataFrame :\n{df[["total_bill", "day"]]}", end=ps)
+    print(f"(2) Colonnes 'total_bill' et 'day' dans un DataFrame :\n{df[["total_bill", "day"]]}", end=ps) # Ou df.loc[:,["total_bill", "day"]]
     # 3. Afficher les 5 premières lignes avec .loc
     print(f"(3) 5 premières lignes avec .loc :\n{df.loc[:4]}", end=ps)
     # 4. Afficher les lignes 10 à 15 (incluses), avec les colonnes 'tip' et 'sex'
