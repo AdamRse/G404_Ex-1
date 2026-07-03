@@ -1,13 +1,9 @@
-from shlex import join
-
 import pandas as pd
 import numpy as np
 from src.header.head import main, printSuccess, printError, printWrong, bcolors # NOQA
 
 ps="\n"+("-"*50)+"\n\n"
-# Cours :
-#
-#
+# Cours : https://github.com/G404-Data-Analyst/Formation_Data_Analyst/blob/main/numpy_et_pandas_cours.ipynb
 
 def exercice1():
     etudiants = {
