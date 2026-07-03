@@ -38,8 +38,27 @@ def exercice1():
     notesPM=nouveauDF[["prenom", "matiere1"]]
     print(f"On ne garde que prénoms et matière1 :\n{notesPM}", end=ps)
 
-
+def exercice2():
+    # Charger les données
+    df = pd.read_csv("data/tips.csv")
+    print("---Exercice 2 ---\n", df, end=ps)
+    # 1. Dimensions du dataframe
+    print(f"(1) Dimension du dataFrame :\n{df.shape}", end=ps)
+    # 2. Liste des colonnes
+    print(f"(2) Liste des colonnes :\n{df.columns.values}", end=ps)
+    # 3. Types des colonnes
+    print(f"(3) Types des colonnes :\n{df.dtypes}", end=ps)
+    # 4. print des 5 premières lignes
+    print(f"(4) 5 Premières lignes du DataFrame :\n{df.head(5)}", end=ps)
+    # 5. Faire un résumé statistique
+    print(f"(5) Résumée statistique :\n{df.describe(include="all")}", end=ps)
+    # 6. Combien a-t-on de valeurs uniques par colonne ?
+    print(f"(6) Nombre de valeurs unique par colonne :\n{df.nunique()}", end="\n___\n\n")
+    # 7. Y a-t-il des valeurs manquantes ? Si oui combien au total ?
+    print(f"(7) Valeurs manquantes :\n{df.isna().sum()}", end=ps)
+    # 8. Quel jour y a-t-il le plus de clients ?
+    print(f"(8) Jour avec le plus de clients :\n{df.value_counts("day").idxmax()}", end=ps)
 
 #  MAIN --------------
-activate_exercice = [1]
+activate_exercice = [2]
 main(activate_exercice, globals())
