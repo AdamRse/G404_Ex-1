@@ -64,7 +64,6 @@ def exercice2():
     print(f"(9) Distribution par jour :\n{perDayDF}", end=ps)
     # 10. Trouver le nombre de tables par jour (size = nombre de tables)
     print(f"(10) Tables par jour :\n{(df.groupby("day")["size"].sum()/df["size"].sum()*100).round(2)}")
-    print("TEST\n",df.groupby("day")["size"].sum())
 
 def exercice3():
     df = pd.read_csv("data/tips.csv")
@@ -90,6 +89,41 @@ def exercice3():
     # 10. Combien de femmes ont laissé un tip supérieur à 5€ ?
     print(f"(10) Combien de femmes ont laissé un tip supérieur à 5€ ? :\n{len(df.loc[(df["tip"] > 5) & (df["sex"] == "Female")])}")
 
+def exercice4():
+    data = {
+        "eleve": ["Léa", "Hugo", "Sarah", "Maxime", "Inès", "Paul"],
+        "python":    ["18", 14, np.nan, 11, 16, 9],
+        "sql":       [15, np.nan, 17, 8, np.nan, 12],
+        "stats":     [12, 16.0, 14, 10, 15, np.nan],
+        "present":   [True, True, True, True, True, False]
+    }
+    df = pd.DataFrame(data)
+    # 1. Faites en sorte que la matière "python" soit de type entier ou flotant
+    df["python"] = pd.to_numeric(df["python"])
+    print(f"Conversion de la matière python en entier :\n{df["python"]}", end=ps)
+    # 2. Diagnostiquer les valeurs manquantes
+    print(f"Valeurs manquantes :\n{df.isna()}\nNombre de valeurs manquantes :\n{df.isna().sum()}\ntotal des valeurs manquantes : {df.isna().sum().sum()}", end=ps)
+    # 3. Remplir les notes manquantes avec la moyenne de leur matière
+    df=df.fillna({
+        "python": df["python"].mean(),
+        "sql": df["sql"].mean(),
+        "stats": df["stats"].mean(),
+    })
+    print(f"Correction des valeurs manquantes avec la moyenne :\n{df}", end=ps)
+    # 4. Créer une colonne "moyenne" (moyenne des 3 matières)
+    df["moyenne"] = df[["python", "sql", "stats"]].mean(axis=1)
+    print(f"Ajout d'une colonne moyennes :\n{df}", end=ps)
+    # 5. Créer une colonne "statut" : "Validé" si moyenne >= 10, "Rattrapage" si entre 8 et 10, "Échec" sinon
+    df["statut"] = np.select([df["moyenne"] >= 10, df["moyenne"] >= 8], ["Validé", "Rattrapage"], default="Échec")
+    print(f"Correction des valeurs manquantes avec la moyenne :\n{df}", end=ps)
+    # 6. Supprimer la colonne "present"
+    df=df.drop("present", axis=1)
+    print(f"Supression de la colonne 'present' :\n{df}", end=ps)
+    # 7. Compter combien d'eleves sont "Validé"
+    print(f"Il y a {(df["statut"] == "Validé").sum()} élèves reçu", end=ps)
+    # 8. Quelle est la moyenne générale de la promo ?
+    print(f"La promo a une moyenne de : {(df["moyenne"].mean()).round(1)}", end=ps)
+
 #  MAIN --------------
-activate_exercice = [3]
+activate_exercice = [4]
 main(activate_exercice, globals())

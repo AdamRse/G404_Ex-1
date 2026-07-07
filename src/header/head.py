@@ -33,14 +33,20 @@ def get_inp2(msg):
     global inp2
     inp2 = input(msg)
 
-def printError(msg):
-    print(bcolors.FAIL, msg, bcolors.ENDC)
+def printError(*args, **kwargs):
+    print(bcolors.FAIL, end="")
+    print(bcolors.FAIL, *args, bcolors.ENDC, **kwargs)
+    print(bcolors.ENDC, end="")
 
-def printSuccess(msg):
-    print(bcolors.OKGREEN, msg, bcolors.ENDC)
+def printSuccess(*args, **kwargs):
+    print(bcolors.OKGREEN+bcolors.BOLD, end="")
+    print(*args, **kwargs)
+    print(bcolors.ENDC, end="")
 
-def printWrong(msg):
-    print(bcolors.WARNING, msg, bcolors.ENDC)
+def printWrong(*args, **kwargs):
+    print(bcolors.WARNING, end="")
+    print(bcolors.WARNING, *args, bcolors.ENDC, **kwargs)
+    print(bcolors.ENDC, end="")
 
 def del_accents(texte):
     accent = ['é', 'è', 'ê', 'à', 'ù', 'û', 'ç', 'ô', 'î', 'ï', 'â']
