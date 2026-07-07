@@ -126,6 +126,39 @@ def exercice4():
     print(f"La promo a une moyenne de : {(df["moyenne"].mean()).round(1)}", end=ps)
 
 def exercice5():
+    # Création du dataset
+    rng = np.random.default_rng(101)
+    sites = ["Roanne"] * 10 + ["St-Étienne"] * 10 + ["Lyon"] * 10
+    niveaux = rng.choice(["Débutant", "Intermédiaire", "Avancé"], 30, p=[0.5, 0.3, 0.2])
+    note = rng.normal(14, 4, 30).round(1).clip(0, 20)
+    heures_etude = rng.integers(5, 30, 30)
+    abandon = rng.choice([0, 1], 30, p=[0.8, 0.2])
+    df = pd.DataFrame({
+        "site": sites,
+        "niveau": niveaux,
+        "note": note,
+        "heures_etude": heures_etude,
+        "abandon": abandon
+    })
+
+    df.head(5)
+    print(df, end=ps)
+    # 1. Note moyenne par site
+    print(f"Calcul de la note moyenne :\n{df.groupby("site")["note"].mean()}", end=ps)
+    # 2. Statistiques par site ("mean", "std", "min", "max", "count")
+    print(f"Statistiques par site :\n{df.groupby("site")["note"].agg(["mean", "std", "min", "max", "count"])}", end=ps)
+    # 3. Note moyenne par site ET par niveau
+    print(f"Moyenne par site et niveau :\n{df.groupby(["site", "niveau"])["note"].mean()}", end=ps)
+    # 4. Nombre d'apprenants par site
+    print(f"Nombre d'apprenants par site :\n{df.groupby("site").size()}", end=ps)
+    # 5. Taux d'abandon par site (NORMALIZE)
+    print(f"Taux d'abandon par site :\n{df.groupby("site")["abandon"].mean()*100}", end=ps)
+    # 6. Heures d'étude moyennes par niveau
+    print(f"Heures d'études moyenne par niveaux :\n{df.groupby("niveau")["heures_etude"].mean()}", end=ps)
+    # 7. Classement des sites avec la meilleure note moyenne
+    print(f"Meilleurs moyennes par sites :\n{df.groupby("site")["note"].mean().sort_values(ascending=False)}", end=ps)
+
+def exercice6():
     df = pd.read_csv("data/IMDB_dataset.csv", encoding="ISO-8859-1", on_bad_lines='skip', delimiter=";")
     print(df, end=ps)
     printWrong(f"Valeurs manquantes par colonnes :\n{df.isna().sum()}")
@@ -152,6 +185,18 @@ def exercice5():
     df['IMBD title ID'] = df['IMBD title ID'].str.replace('tt', "")
     printWrong("correction des IDs IMDB", end=ps)
 
+    # nettoyage des titres
+
+
+    # nettoyage des Genres
+
+
+    # nettoyage des durées
+
+
+    # netoyage des pays
+    df['Country'] = df['Country'].str.replace('USA', 'US')
+
     # nettoyage des incomes
     printWrong(f"correction des IDs IMDB. Valeurs manquantes : {df["Income"].isna().sum()}")
     df['Income'] = df['Income'].str.replace('o', '0')
@@ -174,9 +219,8 @@ def exercice5():
     printSuccess("::::::::::: Données traitées :::::::::::")
     print(df)
 
-def exercice6():
-    pass
+
 
 #  MAIN --------------
-activate_exercice = [6]
+activate_exercice = [5]
 main(activate_exercice, globals())
