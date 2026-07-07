@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import re
 from src.header.head import main, printSuccess, printError, printWrong, bcolors # NOQA
 
 ps="\n"+("-"*50)+"\n\n"
@@ -124,6 +125,58 @@ def exercice4():
     # 8. Quelle est la moyenne générale de la promo ?
     print(f"La promo a une moyenne de : {(df["moyenne"].mean()).round(1)}", end=ps)
 
+def exercice5():
+    df = pd.read_csv("data/IMDB_dataset.csv", encoding="ISO-8859-1", on_bad_lines='skip', delimiter=";")
+    print(df, end=ps)
+    printWrong(f"Valeurs manquantes par colonnes :\n{df.isna().sum()}")
+    printWrong(f"Valeurs manquantes totales :\n{df.isna().sum().sum()}")
+    printSuccess("Nettoyage du CSV", end=ps)
+
+    # colonne unamed 8
+    print(f"Analyse de la colonne Unamed: 8, nombre de données manquantes : {df["Unnamed: 8"].isna().sum()}/{df["Unnamed: 8"].shape[0]}")
+    df=df.drop(columns="Unnamed: 8")
+    printWrong("Supression de la colonne 'Unnamed: 8'", end=ps)
+
+    # supression lignes vides
+    df=df.dropna(how="all", axis=0)
+    printWrong("Supression des lignes vide", end=ps)
+
+    # Correction des index
+    df=df.rename(columns={
+        "Original titlÊ":"Original Title",
+        "Genrë¨":"Genre"
+    })
+    printWrong("Correction des index", end=ps)
+
+    # correxion des ID :
+    df['IMBD title ID'] = df['IMBD title ID'].str.replace('tt', "")
+    printWrong("correction des IDs IMDB", end=ps)
+
+    # nettoyage des incomes
+    printWrong(f"correction des IDs IMDB. Valeurs manquantes : {df["Income"].isna().sum()}")
+    df['Income'] = df['Income'].str.replace('o', '0')
+    df['Income'] = df['Income'].str.replace('$', '')
+    df['Income'] = df['Income'].str.replace(',', '')
+    df["Income"] = pd.to_numeric(df["Income"])
+    printWrong(f"Valeurs manquantes après correction : {df["Income"].isna().sum()}", end=ps)
+
+    # nettoyage des scores
+    df['Score'] = df['Score'].str.replace(',', '.')
+    df['Score'] = df['Score'].str.replace('..', '.')
+    df['Score'] = df['Score'].str.replace(r'[^\d.]', '', regex=True)
+    df['Score'] = pd.to_numeric(df['Score'], errors='coerce')
+
+
+    # conversion des dates uniformes
+    df['Release year'] = pd.to_datetime(df['Release year'], format='mixed', errors='coerce').dt.date
+
+
+    printSuccess("::::::::::: Données traitées :::::::::::")
+    print(df)
+
+def exercice6():
+    pass
+
 #  MAIN --------------
-activate_exercice = [4]
+activate_exercice = [6]
 main(activate_exercice, globals())

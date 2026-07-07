@@ -1,13 +1,4 @@
-import datetime
-import math
-from operator import index
-from pydoc import text
-import re
 import sys
-import time
-import random
-import os
-import itertools
 
 sys.set_int_max_str_digits(0)
 inp = ""
@@ -35,7 +26,7 @@ def get_inp2(msg):
 
 def printError(*args, **kwargs):
     print(bcolors.FAIL, end="")
-    print(bcolors.FAIL, *args, bcolors.ENDC, **kwargs)
+    print(*args, **kwargs)
     print(bcolors.ENDC, end="")
 
 def printSuccess(*args, **kwargs):
@@ -45,7 +36,7 @@ def printSuccess(*args, **kwargs):
 
 def printWrong(*args, **kwargs):
     print(bcolors.WARNING, end="")
-    print(bcolors.WARNING, *args, bcolors.ENDC, **kwargs)
+    print(*args, **kwargs)
     print(bcolors.ENDC, end="")
 
 def del_accents(texte):
