@@ -1,15 +1,11 @@
-from head import *
-import datetime
+
 import math
-from operator import index, mul
-from pydoc import text
 import re
 import sys
 import time
 import random
 import os
 import itertools
-from collections import Counter
 
 sys.set_int_max_str_digits(0)
 
