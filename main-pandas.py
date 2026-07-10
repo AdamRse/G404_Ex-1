@@ -1,8 +1,7 @@
 import pandas as pd
 import numpy as np
-import re
+from src.numpy_pandas.pandas_snipets import convert_int, convert_float, get_list_from_multiple_value
 from src.header.head import main, printSuccess, printError, printWrong, bcolors # NOQA
-from src.exercices import word_list
 
 ps="\n"+("-"*50)+"\n\n"
 # Cours : https://github.com/G404-Data-Analyst/Formation_Data_Analyst/blob/main/numpy_et_pandas_cours.ipynb
@@ -160,81 +159,60 @@ def exercice5():
     print(f"Meilleurs moyennes par sites :\n{df.groupby("site")["note"].mean().sort_values(ascending=False)}", end=ps)
 
 def exercice6():
-    def convert_int(liste_columns_name, round=False):
-        convert_float(liste_columns_name, round)
-        df[liste_columns_name] = df[liste_columns_name].astype(int)
-
-    def convert_float(liste_columns_name, round=False):
-        df[liste_columns_name] = df[liste_columns_name].astype(str)
-        for c in liste_columns_name:
-            df[c] = df[c].str.lower().str.replace('o', '0')
-            df[c] = df[c].str.replace(r'[^\d.]', '', regex=True)
-        df[liste_columns_name] = df[liste_columns_name].astype(float)
-        df[liste_columns_name] = df[liste_columns_name].fillna(0)
-        if round:
-            df[liste_columns_name] = df[liste_columns_name].round()
-
     df = pd.read_csv("data/Pokemon_dataset.csv", delimiter=";")
-    # df=pd.DataFrame({
-    #     df.iloc[0,0]:df.loc[0,:],
-    #     df.iloc[1,0]:df.loc[1,:],
-    #     df.iloc[2,0]:df.loc[2,:],
-    #     df.iloc[3,0]:df.loc[3,:],
-    #     df.iloc[4,0]:df.loc[4,:],
-    #     df.iloc[5,0]:df.loc[5,:],
-    #     df.iloc[6,0].split(" / ")[0]:df.loc[6,:].str.split(" / ", expand=True)[0],
-    #     df.iloc[6,0].split(" / ")[1]:df.loc[6,:].str.split(" / ", expand=True)[1],
-    #     df.iloc[7,0]:df.loc[7,:],
-    #     df.iloc[8,0]:df.loc[8,:],
-    #     df.iloc[9,0]:df.loc[9,:],
-    #     df.iloc[10,0]:df.loc[10,:],
-    # })
-    # df=df.drop("Unnamed: 0", axis=0)
     df=df.T.set_axis(df.iloc[:,0], axis=1).drop("Unnamed: 0", axis=0)
-    print(df, df.columns[6])
     df[df.columns[6].split(" / ")]=df[df.columns[6]].str.split(" / ", n=1, expand=True)
     df=df.drop(df.columns[6], axis=1)
-    convert_int(['HP', 'Speed', 'Generation', 'Attack'])
+    convert_int(df, ['#', 'Total', 'HP', 'Speed', 'Generation', 'Attack',"Sp. Atk", "Sp. Def"])
+    df = df.sort_values("#", ascending=True)
+    df[df == 0]=np.nan
+    df[df[['HP', 'Speed', 'Attack',"Sp. Atk", "Sp. Def"]] > 350]=np.nan
 
     # nettoyage ids
 
-
     # nettoyage Name
+    df["Name"] = df["Name"].str.lower()
+    df["Name"] = df["Name"].str.replace(".+mega ", "mega " ,regex=True)
+    df["Name"] = df["Name"].str.title()
 
 
-    # nettoyage Total
-
-    # nettoyage HP
-    df["HP"] = pd.to_numeric(df["HP"], errors='coerce', downcast="integer")
-
-    # Nettoyage Attack
-    convert_float(["Defense % of Attack"])
-
-
-    # nettoyage Defense
+    # création colonne défense
+    convert_float(df, ["Defense % of Attack"])
     df['Defense'] = ((df['Attack'] * df['Defense % of Attack']) / 100).round()
     df=df.drop("Defense % of Attack", axis=1)
-    convert_int(["Defense"])
-
-    # nettoyage Speed
+    convert_int(df, ["Defense"])
 
     # nettoyage Generation
-    df["Generation"] = pd.to_numeric(df["Generation"], errors='coerce', downcast="integer")
+    df["Generation"]=df["Generation"].replace(0, np.nan)
+    #df.loc[df['#'] == 1, 'Generation'] = 1
+    df["Generation"]=df["Generation"].bfill()
+    convert_int(df, ["Generation"])
 
     # nettoyage Legendary
 
     # nettoyage Types
+    df["Types"] = df["Types"].str.replace(r",\s*$", "" ,regex=True)
+    # types=get_list_from_multiple_value(df["Types"])
+    # printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 
-    # nettoyage Atk spé
+    # nettoyage stats
+    stats_col = ['HP', 'Speed', 'Attack', 'Sp. Atk', 'Sp. Def', 'Defense']
+    is_calculable = df[stats_col].isna().sum(axis=1) < 2
+    diff = df['Total'] - df[stats_col].sum(axis=1)
+    for col in stats_col:
+        condition = is_calculable & df[col].isna()
+        df.loc[condition, col] = diff[condition]
 
-    # nettoyage Def spé
-
+    # fix les sommes
+    is_calculable = df[stats_col].isna().sum(axis=1) == 0
+    df.loc[is_calculable, "Total"]=df[stats_col].sum(axis=1)
 
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
-    print(df, end=ps)
+        print(df, end=ps)
 
+# Exercice Bonus
 def exercice7():
     df = pd.read_csv("data/IMDB_dataset.csv", encoding="ISO-8859-1", on_bad_lines='skip', delimiter=";")
     print(df, end=ps)
@@ -268,12 +246,7 @@ def exercice7():
 
 
     # nettoyage des Genres
-    genres=[]
-    for g_line in df["Genre"]:
-        splitGenre=word_list(g_line, False)
-        for g in splitGenre:
-            if g not in genres:
-                genres.append(g)
+    genres=get_list_from_multiple_value(df["Genre"])
     print("LISTE DES GENRES DE FILM :\n", genres)
     print("Pas de correction sur les genres de film", end=ps)
 

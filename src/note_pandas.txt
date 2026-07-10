@@ -1,0 +1,7 @@
+df.fillna(x) ne fonctionne que si x est un dataframe avec les mêmes colonnes que df
+    il faut transposer df en Série pour que fillna remplisse.
+
+df.loc[lignes, colonnes] lignes et colonne peuvent être des masques de condition.
+    Attention, df["colonne1"] > 10 renvoie bien des lignes, même si on cible une colonne !
+    par exemple : df.loc[df['Prix'] < 10, df.columns.str.contains('Promo')]
+        Renvoie les lignes où le prix est > 10 et qui contiennent une promo.
