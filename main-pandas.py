@@ -168,8 +168,6 @@ def exercice6():
     df[df == 0]=np.nan
     df[df[['HP', 'Speed', 'Attack',"Sp. Atk", "Sp. Def"]] > 350]=np.nan
 
-    # nettoyage ids
-
     # nettoyage Name
     df["Name"] = df["Name"].str.lower()
     df["Name"] = df["Name"].str.replace(".+mega ", "mega " ,regex=True)
@@ -188,12 +186,9 @@ def exercice6():
     df["Generation"]=df["Generation"].bfill()
     convert_int(df, ["Generation"])
 
-    # nettoyage Legendary
-
     # nettoyage Types
     df["Types"] = df["Types"].str.replace(r",\s*$", "" ,regex=True)
-    # types=get_list_from_multiple_value(df["Types"])
-    # printWrong("CHECK DES TYPES DE POKEMON :\n", types)
+    types=get_list_from_multiple_value(df["Types"])
 
     # nettoyage stats
     stats_col = ['HP', 'Speed', 'Attack', 'Sp. Atk', 'Sp. Def', 'Defense']
@@ -207,10 +202,17 @@ def exercice6():
     is_calculable = df[stats_col].isna().sum(axis=1) == 0
     df.loc[is_calculable, "Total"]=df[stats_col].sum(axis=1)
 
+    # fix les double NaN dans les stats
+    missing_double= df[stats_col].isna().sum(axis=1)
+    print(missing_double)
+    for col in stats_col:
+        df.loc[missing_double >= 2, col] = diff[missing_double >= 2]/missing_double
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
-        print(df, end=ps)
+    print(df, end=ps)
+
+    printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 
 # Exercice Bonus
 def exercice7():
