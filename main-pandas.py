@@ -163,10 +163,16 @@ def exercice6():
     df=df.T.set_axis(df.iloc[:,0], axis=1).drop("Unnamed: 0", axis=0)
     df[df.columns[6].split(" / ")]=df[df.columns[6]].str.split(" / ", n=1, expand=True)
     df=df.drop(df.columns[6], axis=1)
+
+    # Pourquoi ????
+    stats_col = ['HP', 'Speed', 'Attack', 'Sp. Atk', 'Sp. Def']
+    print((df[stats_col].isna().sum(axis=1) > 1), end=ps)
+
     convert_int(df, ['#', 'Total', 'HP', 'Speed', 'Generation', 'Attack',"Sp. Atk", "Sp. Def"])
     df = df.sort_values("#", ascending=True)
     df[df == 0]=np.nan
     df[df[['HP', 'Speed', 'Attack',"Sp. Atk", "Sp. Def"]] > 350]=np.nan
+
 
     # nettoyage Name
     df["Name"] = df["Name"].str.lower()
@@ -206,11 +212,11 @@ def exercice6():
     missing_double= df[stats_col].isna().sum(axis=1)
     print(missing_double)
     for col in stats_col:
-        df.loc[missing_double >= 2, col] = diff[missing_double >= 2]/missing_double
+        df.loc[missing_double >= 2, col] = round(diff[missing_double >= 2]/missing_double)
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
-    print(df, end=ps)
+        print(df, end=ps)
 
     printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 
@@ -295,7 +301,6 @@ def exercice7():
     printSuccess("::::::::::: Données traitées :::::::::::")
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         print(df)
-
 
 
 #  MAIN --------------
