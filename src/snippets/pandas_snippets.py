@@ -1,5 +1,5 @@
 import pandas as pd
-from src.exercices import word_list
+from src.snippets.python_snippets import word_list
 
 # convertit le type des colonnes passées en gérant des exception.
 
@@ -22,7 +22,7 @@ def convert_float(df:pd.DataFrame, liste_columns_name:list, round=False):
 def get_list_from_multiple_value(ser:pd.Series) ->list:
     splitted=[]
     for s_line in ser:
-        split_s=word_list(s_line, False)
+        split_s=word_list(s_line)
         for s in split_s:
             if s not in splitted:
                 splitted.append(s)

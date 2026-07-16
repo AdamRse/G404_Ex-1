@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.numpy_pandas.pandas_snipets import convert_int, convert_float, get_list_from_multiple_value
+from src.snippets.pandas_snippets import convert_int, convert_float, get_list_from_multiple_value
 from src.header.head import main, printSuccess, printError, printWrong, bcolors # NOQA
 
 ps="\n"+("-"*50)+"\n\n"
@@ -217,6 +217,8 @@ def exercice6():
     missing_double= df[stats_col].isna().sum(axis=1)
     for col in stats_col:
         df.loc[missing_double >= 2, col] = round(diff[missing_double >= 2]/missing_double)
+
+    df=df[["#", "Name", "Types", "Generation", "Legendary", "HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed", "Total"]]
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
