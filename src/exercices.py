@@ -122,14 +122,15 @@ def word_count(texte, display=True):
 
 
 def word_list(texte, display=True):
-    text_split = re.split(r"[,\s;.)(:?+\[\]!{}=#]+", texte)
     wordList = []
-    for word in text_split:
-        if word != "":
-            wordList.append(word)
-    if display:
-        printSuccess("Liste des mots : ")
-        print(wordList)
+    if isinstance(texte, str):
+        text_split = re.split(r"[,\s;.)(:?+\[\]!{}=#]+", texte)
+        for word in text_split:
+            if word != "":
+                wordList.append(word)
+        if display:
+            printSuccess("Liste des mots : ")
+            print(wordList)
     return wordList
 
 

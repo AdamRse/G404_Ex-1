@@ -2,18 +2,19 @@ import pandas as pd
 from src.exercices import word_list
 
 # convertit le type des colonnes passées en gérant des exception.
+
 # Fixe les données manquantes à 0
 def convert_int(df:pd.DataFrame, liste_columns_name:list, round=False):
-    convert_float(df, liste_columns_name, round)
     df[liste_columns_name].fillna(0)
     df[liste_columns_name].round()
     df[liste_columns_name] = df[liste_columns_name].astype(int)
 
+# Supprime les caractères non alphanumériques, gère le o = 0
 def convert_float(df:pd.DataFrame, liste_columns_name:list, round=False):
     df[liste_columns_name] = df[liste_columns_name].astype(str)
     for c in liste_columns_name:
         df[c] = df[c].str.lower().str.replace('o', '0')
-        df[c] = df[c].str.replace(r'[^\d.]', '', regex=True)
+        df[c] = df[c].str.replace(r'[^\d.,]', '', regex=True)
     df[liste_columns_name] = df[liste_columns_name].astype(float)
     if round:
         df[liste_columns_name] = df[liste_columns_name].round()

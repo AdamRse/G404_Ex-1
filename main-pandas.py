@@ -159,38 +159,41 @@ def exercice5():
     print(f"Meilleurs moyennes par sites :\n{df.groupby("site")["note"].mean().sort_values(ascending=False)}", end=ps)
 
 def exercice6():
+    test=None
     df = pd.read_csv("data/Pokemon_dataset.csv", delimiter=";")
     df=df.T.set_axis(df.iloc[:,0], axis=1).drop("Unnamed: 0", axis=0)
     df[df.columns[6].split(" / ")]=df[df.columns[6]].str.split(" / ", n=1, expand=True)
     df=df.drop(df.columns[6], axis=1)
-
     number_columns=['#', 'Total', 'HP', 'Speed', 'Generation', 'Attack',"Sp. Atk", "Sp. Def", 'Defense % of Attack']
     convert_float(df, number_columns)
     df = df.sort_values("#", ascending=True)
+    df[df[['Speed', 'Attack',"Sp. Atk", "Sp. Def", 'HP']] > 255]=np.nan
     df[df[number_columns] < 1]=np.nan
-    df[df[['Speed', 'Attack',"Sp. Atk", "Sp. Def"]] > 350]=np.nan
+    df=df.dropna(axis=0, how="all")
+
+    # nettoyage de # ID
+    convert_int(df, ["#"])
+
+    # nettoyage des HP
 
     # correction de l'Attack
     stats_no_attack = ['HP', 'Speed', 'Sp. Atk', 'Sp. Def']
-    missing_atk=((df['Total'] - df[stats_no_attack].sum(axis=1)) * 100 / 101).round()
+    missing_atk=((df['Total'] - df[stats_no_attack].sum(axis=1)) / (1+df['Defense % of Attack']/100)).round()
     df['Attack']=df['Attack'].fillna(missing_atk)
-
 
     # nettoyage Name
     df["Name"] = df["Name"].str.lower()
     df["Name"] = df["Name"].str.replace(".+mega ", "mega " ,regex=True)
     df["Name"] = df["Name"].str.title()
 
-
     # création colonne défense
-    convert_float(df, ["Defense % of Attack"])
     df['Defense'] = ((df['Attack'] * df['Defense % of Attack']) / 100).round()
-    df=df.drop("Defense % of Attack", axis=1)
-    convert_int(df, ["Defense"])
+    #df=df.drop("Defense % of Attack", axis=1)
+    convert_float(df, ["Defense"])
+
 
     # nettoyage Generation
     df["Generation"]=df["Generation"].replace(0, np.nan)
-    #df.loc[df['#'] == 1, 'Generation'] = 1
     df["Generation"]=df["Generation"].bfill()
     convert_int(df, ["Generation"])
 
@@ -212,14 +215,13 @@ def exercice6():
 
     # fix les double NaN dans les stats
     missing_double= df[stats_col].isna().sum(axis=1)
-    print(missing_double)
     for col in stats_col:
         df.loc[missing_double >= 2, col] = round(diff[missing_double >= 2]/missing_double)
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
         print("TEST :\n", test, end=ps)
-    print(df, end=ps)
+        print(df, end=ps)
 
     printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 

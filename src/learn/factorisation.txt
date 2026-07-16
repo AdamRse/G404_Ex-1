@@ -1,0 +1,6 @@
+total = x + x/100*def + sum_reste
+# def = def/100
+x + x*def = total - sum_reste
+1x + def*x
+(1 + def) * x = total - sum_reste
+x = (total - sum_reste) / (1 + def)
