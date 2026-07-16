@@ -2,7 +2,12 @@
 SCRIPT_PATH="$(readlink -f "$0")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
+IDE_PROCESS_NAME="zed-editor"
+
 cd "${SCRIPT_DIR}" || exit 1
+if ! pgrep -x "${IDE_PROCESS_NAME}"; then
+    zed .
+fi
 source .venv/bin/activate
 file="main-pandas.py"
 [[ -n $1 ]] && file=$1
