@@ -164,14 +164,16 @@ def exercice6():
     df[df.columns[6].split(" / ")]=df[df.columns[6]].str.split(" / ", n=1, expand=True)
     df=df.drop(df.columns[6], axis=1)
 
-    # Pourquoi ????
-    stats_col = ['HP', 'Speed', 'Attack', 'Sp. Atk', 'Sp. Def']
-    print((df[stats_col].isna().sum(axis=1) > 1), end=ps)
-
-    convert_int(df, ['#', 'Total', 'HP', 'Speed', 'Generation', 'Attack',"Sp. Atk", "Sp. Def"])
+    number_columns=['#', 'Total', 'HP', 'Speed', 'Generation', 'Attack',"Sp. Atk", "Sp. Def", 'Defense % of Attack']
+    convert_float(df, number_columns)
     df = df.sort_values("#", ascending=True)
-    df[df == 0]=np.nan
-    df[df[['HP', 'Speed', 'Attack',"Sp. Atk", "Sp. Def"]] > 350]=np.nan
+    df[df[number_columns] < 1]=np.nan
+    df[df[['Speed', 'Attack',"Sp. Atk", "Sp. Def"]] > 350]=np.nan
+
+    # correction de l'Attack
+    stats_no_attack = ['HP', 'Speed', 'Sp. Atk', 'Sp. Def']
+    missing_atk=((df['Total'] - df[stats_no_attack].sum(axis=1)) * 100 / 101).round()
+    df['Attack']=df['Attack'].fillna(missing_atk)
 
 
     # nettoyage Name
@@ -216,7 +218,8 @@ def exercice6():
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
-        print(df, end=ps)
+        print("TEST :\n", test, end=ps)
+    print(df, end=ps)
 
     printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 
