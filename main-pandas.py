@@ -1,6 +1,8 @@
+from IPython.display import display
+from tabulate import tabulate
 import pandas as pd
 import numpy as np
-from src.snippets.pandas_snippets import convert_int, convert_float, get_list_from_multiple_value
+from src.snippets.pandas_snippets import convert_column_int, convert_column_float, get_list_from_multiple_value, get_list_from_column
 from src.header.head import main, printSuccess, printError, printWrong, bcolors # NOQA
 
 ps="\n"+("-"*50)+"\n\n"
@@ -165,14 +167,14 @@ def exercice6():
     df[df.columns[6].split(" / ")]=df[df.columns[6]].str.split(" / ", n=1, expand=True)
     df=df.drop(df.columns[6], axis=1)
     number_columns=['#', 'Total', 'HP', 'Speed', 'Generation', 'Attack',"Sp. Atk", "Sp. Def", 'Defense % of Attack']
-    convert_float(df, number_columns)
+    convert_column_float(df, number_columns)
     df = df.sort_values("#", ascending=True)
     df[df[['Speed', 'Attack',"Sp. Atk", "Sp. Def", 'HP']] > 255]=np.nan
     df[df[number_columns] < 1]=np.nan
     df=df.dropna(axis=0, how="all")
 
     # nettoyage de # ID
-    convert_int(df, ["#"])
+    convert_column_int(df, ["#"])
 
     # nettoyage des HP
 
@@ -189,13 +191,12 @@ def exercice6():
     # création colonne défense
     df['Defense'] = ((df['Attack'] * df['Defense % of Attack']) / 100).round()
     #df=df.drop("Defense % of Attack", axis=1)
-    convert_float(df, ["Defense"])
-
+    convert_column_float(df, ["Defense"])
 
     # nettoyage Generation
     df["Generation"]=df["Generation"].replace(0, np.nan)
     df["Generation"]=df["Generation"].bfill()
-    convert_int(df, ["Generation"])
+    convert_column_int(df, ["Generation"])
 
     # nettoyage Types
     df["Types"] = df["Types"].str.replace(r",\s*$", "" ,regex=True)
@@ -222,8 +223,8 @@ def exercice6():
 
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
-        print("TEST :\n", test, end=ps)
-        print(df, end=ps)
+        #print("TEST :\n", test, end=ps)
+    print(tabulate(df, headers=df.columns, tablefmt="double_grid"))
 
     printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 
@@ -256,9 +257,10 @@ def exercice7():
     # correxion des ID :
     df['IMDB title ID'] = df['IMDB title ID'].str.replace('tt', "")
     printWrong("correction des IDs IMDB", end=ps)
-
     # nettoyage des titres
-
+    df['Original Title'] = df['Original Title'].str.replace('Ã©', 'é')
+    df['Original Title'] = df['Original Title'].str.replace('Ã¹', 'ù')
+    df['Original Title'] = df['Original Title'].str.replace('Â·', '-')
 
     # nettoyage des Genres
     genres=get_list_from_multiple_value(df["Genre"])
@@ -279,6 +281,13 @@ def exercice7():
     df['Country'] = df['Country'].str.replace('Zesland', 'Zealand')
     df['Country'] = df['Country'].str.replace('Zeland', 'Zealand')
     df['Country'] = df['Country'].str.replace('.', '')
+
+    # nettoyage des rating
+    printWrong(f"Valeurs de Rating : {get_list_from_column(df["Content Rating"])}")
+    df['Content Rating'] = df['Content Rating'].str.replace('Not Rated', "G")
+    df['Content Rating'] = df['Content Rating'].str.replace('Approved', "G")
+    df['Content Rating'] = df['Content Rating'].str.replace('Unrated', "R")
+    printWrong(f"Valeurs de Rating après correction : {get_list_from_column(df["Content Rating"])}", end=ps)
 
     # nettoyage des incomes
     printWrong(f"correction des IDs IMDB. Valeurs manquantes : {df["Income"].isna().sum()}")
@@ -306,7 +315,7 @@ def exercice7():
 
 
     printSuccess("::::::::::: Données traitées :::::::::::")
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+    with pd.option_context('display.max_rows', None):  # more options can be specified also
         print(df)
 
 
