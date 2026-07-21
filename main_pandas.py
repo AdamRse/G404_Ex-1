@@ -224,9 +224,9 @@ def exercice6():
     with pd.option_context('display.max_rows', None):  # more options can be specified also
         pass
         #print("TEST :\n", test, end=ps)
-    print(tabulate(df, headers=df.columns, tablefmt="double_grid"))
+    #print(tabulate(df, headers=df.columns, tablefmt="double_grid"))
 
-    printWrong("CHECK DES TYPES DE POKEMON :\n", types)
+    #printWrong("CHECK DES TYPES DE POKEMON :\n", types)
 
 # Exercice Bonus
 def exercice7():

@@ -9,7 +9,7 @@ if ! pgrep -x "${IDE_PROCESS_NAME}"; then
     zed .
 fi
 source .venv/bin/activate
-file="main-matplotlib.py"
+file="main_matplotlib.py"
 [[ -n $1 ]] && file=$1
 clear
 find . -path "./.venv" -prune -o -name "*.py" -print | entr sh -c "clear && python $file"
