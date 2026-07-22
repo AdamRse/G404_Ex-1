@@ -5,7 +5,6 @@ matplotlib.use('module://pyplotsixel')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from src.snippets.pandas_snippets import convert_column_int, convert_column_float, get_list_from_multiple_value, get_list_from_column
 from src.header.head import main, printSuccess, printError, printWrong, bcolors # NOQA
 
 df = pd.read_csv('data/pokemon_clean.csv')
@@ -31,6 +30,8 @@ axs[0,1].set_title('Distribution stats total')
 axs[0,1].set_xlabel('Stats totales')
 axs[0,1].set_ylabel('Nombre de Pokémon')
 axs[0,1].grid()
+
+axs[1,0].scatter(b[:-1], n)
 
 #axs[1,0].pie(df.loc[df['Legendary'] == "True", 'Generation'].value_counts(), labels=["gen 1", "gen 2", "gen 3", "gen 4", "gen 5", "gen 6"])
 fig.suptitle("Stats pokémon")
