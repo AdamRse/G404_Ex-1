@@ -17,13 +17,9 @@ graph_gen = df['Generation'].value_counts().sort_index()
 axs[0,0].pie(
     graph_gen,
     labels=[f"gen {ng}" for ng in graph_gen.index],
-    autopct=lambda pourcent: f"{round(pourcent * graph_gen.sum() / 100)}\n({pourcent}%)"
+    autopct=lambda pourcent: f"{round(pourcent, 2)}%\n({round(pourcent * graph_gen.sum() / 100)})"
 )
-axs[0,0].pie(
-    graph_gen,
-    labels=[f"gen {ng}" for ng in graph_gen.index],
-    autopct=lambda pourcent: f"{round(pourcent * graph_gen.sum() / 100)}\n({pourcent}%)"
-)
+
 axs[0,0].set_title('Distribution des générations')
 
 n, b, _ = axs[0,1].hist(df['Total'], bins=10, edgecolor="Black", color="skyblue")
@@ -37,6 +33,5 @@ axs[0,1].set_ylabel('Nombre de Pokémon')
 axs[0,1].grid()
 
 #axs[1,0].pie(df.loc[df['Legendary'] == "True", 'Generation'].value_counts(), labels=["gen 1", "gen 2", "gen 3", "gen 4", "gen 5", "gen 6"])
-
 fig.suptitle("Stats pokémon")
 fig.show()
