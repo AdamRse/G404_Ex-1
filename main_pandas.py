@@ -227,6 +227,7 @@ def exercice6():
     #print(tabulate(df, headers=df.columns, tablefmt="double_grid"))
 
     #printWrong("CHECK DES TYPES DE POKEMON :\n", types)
+    df.to_csv('pokemon_clean.csv', index=False)
 
 # Exercice Bonus
 def exercice7():
