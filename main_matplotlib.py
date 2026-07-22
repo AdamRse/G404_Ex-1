@@ -10,9 +10,11 @@ from src.header.head import main, printSuccess, printError, printWrong, bcolors 
 df = pd.read_csv('data/pokemon_clean.csv')
 print(df)
 
+
 fig, axs = plt.subplots(2,2)
 graph_gen = df['Generation'].value_counts().sort_index()
 
+# Idée : ajouter visuel légendaires et mega dans un .pie() exterieur
 axs[0,0].pie(
     graph_gen,
     labels=[f"gen {ng}" for ng in graph_gen.index],
@@ -32,23 +34,36 @@ axs[0,1].set_ylabel('Nombre de Pokémon')
 axs[0,1].grid()
 # --------------
 
-attaque = df['Attack']
-defense = df['Defense']
+attaque = df['Attack']+df['Sp. Atk']
+defense = df['Defense']+df['Sp. Def']
 axs[1,0].scatter(attaque, defense, alpha=0.2, color='blue', label='Pokémon')
 
-coeff = np.polyfit(attaque, defense, 1)  # données en abscisse, données en ordonnée, courbe recherchée (1=droite)
-fct_poly = np.poly1d(coeff) # renvoie une fct qui permet de calculer f(x) (f(x)=ax + b)
-print("polyfit : ",coeff)
-atk_min_max=[min(attaque),max(attaque)]
-axs[1,0].plot(atk_min_max, fct_poly(atk_min_max), color='red', label='Tendance')
+coeffs = np.polyfit(attaque, defense, 1)  # données en abscisse, données en ordonnée, courbe recherchée (1=droite)
+fct_poly = np.poly1d(coeffs) # renvoie une fct qui permet de calculer f(x) (f(x)=ax + b)
+print("polyfit : ",coeffs)
 
-axs[1,0].set_title('Équilibrage')
-axs[1,0].set_xlabel('Attaque')
-axs[1,0].set_ylabel('Défense')
+atk_min_max=[min(attaque),max(attaque)]
+#def_min_max=[min(defense),max(defense)]
+axs[1,0].plot(atk_min_max, fct_poly(atk_min_max), color='red', label='Tendance', linestyle="dashed")
+
+axs[1,0].set_title('Équilibrage physique')
+axs[1,0].set_xlabel('Potentiel offensif')
+axs[1,0].set_ylabel('Potentiel défensif')
 axs[1,0].grid(True, alpha=0.6)
 axs[1,0].legend()
 # --------------
 
-#axs[1,0].pie(df.loc[df['Legendary'] == "True", 'Generation'].value_counts(), labels=["gen 1", "gen 2", "gen 3", "gen 4", "gen 5", "gen 6"])
+df['Mega']=df['Name'].str.contains(r'^mega\s.+$', case=False, na=False, regex=True)
+print(df[df['Mega'] == True])
+lengendaires = df.loc[df['Legendary'] == True & df['Mega'] == False, 'Total']
+normaux = df.loc[df['Legendary'] == False & df['Mega'] == False, 'Total']
+
+axs[1,1].boxplot(
+    [lengendaires, normaux],
+    tick_labels=['Legendaires', 'Normaux']
+)
+# --------------
+
+
 fig.suptitle("Stats pokémon")
 fig.show()
