@@ -63,6 +63,7 @@ def exercice2():
     print(f"(8) Jour avec le plus de clients :\n{df.value_counts("day").idxmax()}", end=ps) # df['day'].mode()[0] ou df["index"].value_counts().index[0]
     # 9. Trouver la distribution de la semaine en % de chaque journée
     countedDF=df.value_counts("day")
+    print("COUNTED\n",countedDF)
     perDayDF = round(countedDF/countedDF.sum()*100, 2)
     print(f"(9) Distribution par jour :\n{perDayDF}", end=ps)
     # 10. Trouver le nombre de tables par jour (size = nombre de tables)
@@ -321,5 +322,5 @@ def exercice7():
 
 
 #  MAIN --------------
-activate_exercice = [6]
+activate_exercice = [2]
 main(activate_exercice, globals())
