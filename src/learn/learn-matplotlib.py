@@ -36,3 +36,5 @@ def cel1():
     plt.show()
 
 cel1()
+
+# Note : Attention, les .boxplot ne supportent pas de valeurs NaN !
