@@ -34,3 +34,15 @@ def get_list_from_column(ser:pd.Series) ->list:
         if i not in items:
             items.append(i)
     return items
+
+# Récupérer la range pertinente des données (sans fliers)
+def get_quartile_range(q1, q3):
+    iqr=q3-q1
+    return [q1-1.5*iqr,q3+1.5*iqr]
+
+
+# Enlever les fliers de la série
+def remove_fliers(s: pd.Series) -> pd.Series:
+    quartiles = s.quantile([0.25, 0.75])
+    data_min, data_max =get_quartile_range(quartiles.iloc[0], quartiles.iloc[1])
+    return s[s.between(data_min, data_max)]
