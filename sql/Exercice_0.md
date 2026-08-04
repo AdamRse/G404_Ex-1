@@ -1,3 +1,4 @@
+```sql
 CREATE DATABASE school;
 
 CREATE TABLE student (
@@ -59,3 +60,4 @@ CONSTRAINT fk_score_student_id
 CONSTRAINT fk_score_class_id
     FOREIGN KEY grade(class_id)
     REFERENCES class(id)
+```
