@@ -30,3 +30,8 @@ Executer le test
 Exercice 2
   - `docker exec -it postgres-local psql -U admin -d jeux_de_societe`
   - `docker exec -e PGPASSWORD=monmotdepasse -t postgres-local pg_dump -U admin -d testdb -t jeux_de_societe --no-owner --no-privileges > jeux_de_societe.sql`
+
+# Attention !!
+- Strings : Avec PostgreSQL les strings ne fontctionnent qu'avec les `'`. Les `"` sont utilisées dans la requête, pour renommer une colonne avec `AS` par exemple.
+  - Si on utlise `AS "Nouvelle colonne"`, alors il faudra lutiliser dans toute la requête : `ORDER BY "Nouvelle colonne"`.
+  - Sans les `"`, les colonnes sont mises en miniscules
