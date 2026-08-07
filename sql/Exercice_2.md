@@ -135,13 +135,6 @@ LIMIT 3;
 
 ### Question 16 : Parmi les jeux sortis après 2015, afficher les types qui ont une note moyenne supérieure à 7.5.
 `
-SELECT DISTINCT type_jeu
-FROM jeux_de_societe
-WHERE annee_sortie > 2015
-AND note_moyenne > 7.5;
-`
-> Note moyenne de note moyenne ?
-`
 SELECT type_jeu
 FROM jeux_de_societe
 WHERE annee_sortie > 2015
