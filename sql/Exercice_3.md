@@ -190,7 +190,8 @@ DROP COLUMN nationalite;
 ### Question 16 : Modifier la colonne id de la table membres pour ajouter une generation automatique des id.
 `
 ALTER TABLE membres ALTER COLUMN id DROP IDENTITY; --On enlève l'auto increment qu'on ne devait pas mettre
-
+`
+`
 ALTER TABLE membres ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
 `
 
