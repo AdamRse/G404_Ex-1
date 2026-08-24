@@ -38,7 +38,7 @@ ALTER TABLE <table>
   <instructions>
 `
 - Exemples :
-`
+```
 ALTER TABLE <table> ADD COLUMN <colonne> <type>
 ALTER TABLE <table> ALTER COLUMN <colonne> TYPE <nouveau type>
 ALTER TABLE <table> ALTER COLUMN <colonne> ADD GENERATED ALWAYS AS IDENTITY
@@ -48,7 +48,7 @@ ALTER TABLE <table> ADD CONSTRAINT ...
 ALTER TABLE <table> DROP CONSTRAINT ...
 ALTER TABLE <table> RENAME TO <nouveau nom table>
 ALTER TABLE <table> RENAME COLUMN <colonne> TO <nouveau nom colonne>
-`
+```
 ### Ajouter les données d'une autre table
 `
 INSERT INTO <table1>(<liste colonnes>)
@@ -103,6 +103,7 @@ Exercice 2
 
 # Se conencter à l'interface pgAdmin
 - Si ce n'est pas fait, lancer le docker compose `docker compose up -d`
+  - ATTENTION, l'interface pgAdmin peut mettre une minute à se lancer et à être accessible en localhost
 - Se connecter à `localhost:5050`
 - Créer un mot de passe master si c'est demmandé (première connexion)
 - Créer un nouveau serveur (Le serveur est une nouvelle connexion) :
