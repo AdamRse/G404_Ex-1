@@ -93,95 +93,176 @@ INSERT INTO avis VALUES
 *Répondez aux questions suivantes :*
 
 ## Question 1 : Afficher tous les noms de jeux, les commentaires et les notes laissés. Les jeux sans avis doivent apparaître aussi.
-
-
+```sql
+SELECT jeux.titre, avis.commentaire, avis.note
+FROM jeux
+LEFT JOIN avis
+ON jeux.id = avis.jeu_id;
+```
 
 ## Question 2 : Afficher le pseudo de chaque utilisateur qui possède au moins un jeu.
-
-
+```sql
+SELECT DISTINCT utilisateurs.pseudo AS "Utilisateurs ayant 1 jeu ou +"
+FROM utilisateurs
+JOIN bibliotheques
+ON utilisateurs.id = bibliotheques.utilisateur_id;
+-- Ou
+SELECT utilisateurs.pseudo AS "Utilisateurs ayant 1 jeu ou +"
+FROM utilisateurs
+JOIN bibliotheques
+ON utilisateurs.id = bibliotheques.utilisateur_id
+GROUP BY utilisateurs.pseudo;
+```
 
 ## Question 3 : Trouver les jeux qui n'ont reçu aucun avis.
-
+```sql
+SELECT jeux.titre AS "Jeux sans avis"
+FROM jeux
+LEFT JOIN avis
+ON jeux.id = avis.jeu_id
+WHERE avis.id IS NULL;
+```
 
 
 ## Question 4 : Trouver les utilisateurs qui n'ont aucun jeu dans leur bibliothèque.
-
+```sql
+SELECT utilisateurs.pseudo AS "Utilisateurs sans jeu"
+FROM utilisateurs
+LEFT JOIN bibliotheques
+ON utilisateurs.id = bibliotheques.jeu_id
+WHERE bibliotheques.id IS NULL;
+```
 
 
 ## Question 5 : Afficher les nombres moyens d'heures jouées pour chaque jeu.
-
+```sql
+SELECT jeux.titre, AVG(bibliotheques.heures_jouees) AS "Moyenne d'heures jouées"
+FROM jeux
+JOIN bibliotheques
+ON jeux.id = bibliotheques.jeu_id
+GROUP BY jeux.titre;
+```
 
 
 ## Question 6 : Afficher le pseudo de chaque utilisateur et le titre des jeux qu'il possède dans sa bibliothèque.
-
+```sql
+SELECT utilisateurs.pseudo, jeux.titre AS "jeu possédé"
+FROM utilisateurs
+JOIN bibliotheques
+ON utilisateurs.id = bibliotheques.utilisateur_id
+JOIN jeux
+ON bibliotheques.jeu_id = jeux.id;
+```
 
 
 ## Question 7 : Afficher les pseudos, titres de jeux et notes pour tous les avis laissés.
-
+```sql
+SELECT avis.commentaire, utilisateurs.pseudo, jeux.titre, avis.note
+FROM avis
+JOIN utilisateurs
+ON avis.utilisateur_id = utilisateurs.id
+JOIN jeux
+ON avis.jeu_id = jeux.id;
+```
 
 
 ## Question 8 : Afficher les pseudos, titres et heures jouées, triés par heures jouées décroissantes, limité aux 5 premiers.
+```sql
 
+```
 
 
 ## Question 9 : Pour chaque utilisateur, afficher son pseudo et le nombre de jeux qu'il possède, trié du plus grand au plus petit.
+```sql
 
+```
 
 
 ## Question 10 : Afficher les pseudos, titres de jeux et notes pour les avis dont la note est supérieure ou égale à 4, trié par note décroissante.
+```sql
 
+```
 
 
 ## Question 11 : Afficher tous les utilisateurs et le titre des jeux qu'ils possèdent. Les utilisateurs sans jeu doivent apparaître aussi.
+```sql
 
+```
 
 
 ## Question 12 : Pour chaque utilisateur, afficher son pseudo et la moyenne de ses notes données. Les utilisateurs qui n'ont donné aucun avis doivent apparaître avec NULL.
+```sql
 
+```
 
 
 ## Question 13 : Afficher tous les jeux et les pseudos des utilisateurs qui les possèdent. L'objectif est que tous les jeux apparaissent, même ceux qui ne sont dans aucune bibliothèque.
+```sql
 
+```
 
 
 ## Question 14 : Afficher tous les utilisateurs et tous les jeux, avec les heures jouées quand un utilisateur possède un jeu.
+```sql
 
+```
 
 
 ## Question 15 : Trouver les utilisateurs sans jeu et les jeux sans propriétaire.
+```sql
 
+```
 
 
 ## Question 16 : Pour chaque jeu, afficher son titre et la note moyenne reçue. Tous les jeux doivent apparaître, même ceux sans note.
+```sql
 
+```
 
 
 ## Question 17 : Afficher le pseudo de chaque utilisateur et le pseudo de son parrain (celui qui l'a invité).
+```sql
 
+```
 
 
 ## Question 18 : Trouver les utilisateurs qui ont parrainé au moins 2 personnes, avec le nombre de filleuls.
+```sql
 
+```
 
 
 ## Question 19 : Trouve les utilisateurs qui n'ont pas été parrainés et qui n'ont parrainé personne.
+```sql
 
+```
 
 
 ## Question 20 : Générer toutes les combinaisons possibles entre les utilisateurs et les jeux. Afficher seulement les 10 premières lignes.
+```sql
 
+```
 
 
 ## Question 21 : Afficher le commentaire, le pseudo, le titre du jeu, la note donnée et les heures jouées pour chacun des avis.
+```sql
 
+```
 
 
 ## Question 22 : Afficher tous les utilisateurs, les jeux qu'ils possèdent (avec heures jouées), et les notes qu'ils ont donné. Inclure les utilisateurs sans jeu, les jeux sans avis, et les avis sans possession.
+```sql
 
+```
 
 
 ## Question 23 : Afficher les jeux du plus rentable au moins rentable en heures jouées moyennes par euro payé. Afficher le nom du jeu et le ratio demandé.
+```sql
 
+```
 
 
 ## Question 24 : Afficher, pour l'utilisateur ShadowSlayer, toute la chaîne de générations de ses filleuls et leurs propres filleuls.
+```sql
+
+```
