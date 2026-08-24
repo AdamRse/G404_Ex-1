@@ -101,6 +101,17 @@ Exercice 2
   - `docker exec -it postgres-local psql -U admin -d jeux_de_societe`
   - `docker exec -e PGPASSWORD=monmotdepasse -t postgres-local pg_dump -U admin -d testdb -t jeux_de_societe --no-owner --no-privileges > jeux_de_societe.sql`
 
+# Se conencter à l'interface pgAdmin
+- Si ce n'est pas fait, lancer le docker compose `docker compose up -d`
+- Se connecter à `localhost:5050`
+- Créer un mot de passe master si c'est demmandé (première connexion)
+- Créer un nouveau serveur (Le serveur est une nouvelle connexion) :
+  - Host name/address : `postgres`
+  - Port : `5432`
+  - Maintenance database : `testdb`
+  - Username : `admin`
+  - Password : `monmotdepasse`
+
 # Attention !!
 - Strings : Avec PostgreSQL les strings ne fontctionnent qu'avec les `'`. Les `"` sont utilisées dans la requête, pour renommer une colonne avec `AS` par exemple.
   - Si on utlise `AS "Nouvelle colonne"`, alors il faudra lutiliser dans toute la requête : `ORDER BY "Nouvelle colonne"`.
