@@ -1,0 +1,171 @@
+## Question 8 : Afficher les pseudos, titres et heures jouées, triés par heures jouées décroissantes, limité aux 5 premiers.
+```sql
+SELECT u.pseudo, j.titre, b.heures_jouees
+FROM utilisateurs u
+JOIN bibliotheques b ON u.id = b.utilisateur_id
+JOIN jeux j ON b.jeu_id = j.id
+ORDER BY b.heures_jouees DESC
+LIMIT 5;
+```
+
+## Question 9 : Pour chaque utilisateur, afficher son pseudo et le nombre de jeux qu'il possède, trié du plus grand au plus petit.
+```sql
+SELECT u.pseudo, COUNT(b.id) AS nombre_jeux
+FROM utilisateurs u
+LEFT JOIN bibliotheques b ON u.id = b.utilisateur_id
+GROUP BY u.id, u.pseudo
+ORDER BY nombre_jeux DESC;
+```
+
+## Question 10 : Afficher les pseudos, titres de jeux et notes pour les avis dont la note est supérieure ou égale à 4, trié par note décroissante.
+```sql
+SELECT u.pseudo, j.titre, a.note
+FROM avis a
+JOIN utilisateurs u ON a.utilisateur_id = u.id
+JOIN jeux j ON a.jeu_id = j.id
+WHERE a.note >= 4
+ORDER BY a.note DESC;
+```
+
+## Question 11 : Afficher tous les utilisateurs et le titre des jeux qu'ils possèdent. Les utilisateurs sans jeu doivent apparaître aussi.
+```sql
+SELECT u.pseudo, j.titre
+FROM utilisateurs u
+LEFT JOIN bibliotheques b ON u.id = b.utilisateur_id
+LEFT JOIN jeux j ON b.jeu_id = j.id;
+```
+
+## Question 12 : Pour chaque utilisateur, afficher son pseudo et la moyenne de ses notes données. Les utilisateurs qui n'ont donné aucun avis doivent apparaître avec NULL.
+```sql
+SELECT u.pseudo, AVG(a.note) AS moyenne_notes
+FROM utilisateurs u
+LEFT JOIN avis a ON u.id = a.utilisateur_id
+GROUP BY u.id, u.pseudo;
+```
+
+## Question 13 : Afficher tous les jeux et les pseudos des utilisateurs qui les possèdent. L'objectif est que tous les jeux apparaissent, même ceux qui ne sont dans aucune bibliothèque.
+```sql
+SELECT j.titre, u.pseudo
+FROM jeux j
+LEFT JOIN bibliotheques b ON j.id = b.jeu_id
+LEFT JOIN utilisateurs u ON b.utilisateur_id = u.id;
+```
+
+## Question 14 : Afficher tous les utilisateurs et tous les jeux, avec les heures jouées quand un utilisateur possède un jeu.
+```sql
+SELECT u.pseudo, j.titre, b.heures_jouees
+FROM utilisateurs u
+CROSS JOIN jeux j
+LEFT JOIN bibliotheques b ON u.id = b.utilisateur_id AND j.id = b.jeu_id;
+```
+
+## Question 15 : Trouver les utilisateurs sans jeu et les jeux sans propriétaire.
+```sql
+SELECT u.pseudo AS nom, 'Utilisateur sans jeu' AS statut
+FROM utilisateurs u
+LEFT JOIN bibliotheques b ON u.id = b.utilisateur_id
+WHERE b.id IS NULL
+
+UNION ALL
+
+SELECT j.titre, 'Jeu sans propriétaire'
+FROM jeux j
+LEFT JOIN bibliotheques b ON j.id = b.jeu_id
+WHERE b.id IS NULL;
+```
+
+## Question 16 : Pour chaque jeu, afficher son titre et la note moyenne reçue. Tous les jeux doivent apparaître, même ceux sans note.
+```sql
+SELECT j.titre, AVG(a.note) AS note_moyenne
+FROM jeux j
+LEFT JOIN avis a ON j.id = a.jeu_id
+GROUP BY j.id, j.titre;
+```
+
+## Question 17 : Afficher le pseudo de chaque utilisateur et le pseudo de son parrain (celui qui l'a invité).
+```sql
+SELECT u.pseudo AS utilisateur, p.pseudo AS parrain
+FROM utilisateurs u
+LEFT JOIN utilisateurs p ON u.parrain_id = p.id;
+```
+
+## Question 18 : Trouver les utilisateurs qui ont parrainé au moins 2 personnes, avec le nombre de filleuls.
+```sql
+SELECT p.pseudo, COUNT(u.id) AS nombre_filleuls
+FROM utilisateurs p
+JOIN utilisateurs u ON u.parrain_id = p.id
+GROUP BY p.id, p.pseudo
+HAVING COUNT(u.id) >= 2;
+```
+
+## Question 19 : Trouve les utilisateurs qui n'ont pas été parrainés et qui n'ont parrainé personne.
+```sql
+SELECT pseudo
+FROM utilisateurs
+WHERE parrain_id IS NULL
+  AND id NOT IN (
+      SELECT parrain_id
+      FROM utilisateurs
+      WHERE parrain_id IS NOT NULL
+  );
+```
+
+## Question 20 : Générer toutes les combinaisons possibles entre les utilisateurs et les jeux. Afficher seulement les 10 premières lignes.
+```sql
+SELECT u.pseudo, j.titre
+FROM utilisateurs u
+CROSS JOIN jeux j
+LIMIT 10;
+```
+
+## Question 21 : Afficher le commentaire, le pseudo, le titre du jeu, la note donnée et les heures jouées pour chacun des avis.
+```sql
+SELECT a.commentaire, u.pseudo, j.titre, a.note, b.heures_jouees
+FROM avis a
+JOIN utilisateurs u ON a.utilisateur_id = u.id
+JOIN jeux j ON a.jeu_id = j.id
+LEFT JOIN bibliotheques b ON a.utilisateur_id = b.utilisateur_id AND a.jeu_id = b.jeu_id;
+```
+
+## Question 22 : Afficher tous les utilisateurs, les jeux qu'ils possèdent (avec heures jouées), et les notes qu'ils ont donné. Inclure les utilisateurs sans jeu, les jeux sans avis, et les avis sans possession.
+```sql
+SELECT u.pseudo, j.titre, b.heures_jouees, a.note
+FROM utilisateurs u
+LEFT JOIN (
+    SELECT utilisateur_id, jeu_id FROM bibliotheques
+    UNION
+    SELECT utilisateur_id, jeu_id FROM avis
+) ua ON u.id = ua.utilisateur_id
+LEFT JOIN jeux j ON ua.jeu_id = j.id
+LEFT JOIN bibliotheques b ON u.id = b.utilisateur_id AND j.id = b.jeu_id
+LEFT JOIN avis a ON u.id = a.utilisateur_id AND j.id = a.jeu_id;
+```
+
+## Question 23 : Afficher les jeux du plus rentable au moins rentable en heures jouées moyennes par euro payé. Afficher le nom du jeu et le ratio demandé.
+```sql
+SELECT j.titre, AVG(b.heures_jouees) / NULLIF(j.prix, 0) AS ratio_rentabilite
+FROM jeux j
+LEFT JOIN bibliotheques b ON j.id = b.jeu_id
+GROUP BY j.id, j.titre, j.prix
+HAVING j.prix > 0
+ORDER BY ratio_rentabilite DESC;
+```
+
+## Question 24 : Afficher, pour l'utilisateur ShadowSlayer, toute la chaîne de générations de ses filleuls et leurs propres filleuls.
+```sql
+WITH RECURSIVE chaine_filleuls AS (
+    SELECT id, pseudo, parrain_id, 1 AS generation
+    FROM utilisateurs
+    WHERE parrain_id = (SELECT id FROM utilisateurs WHERE pseudo = 'ShadowSlayer')
+
+    UNION ALL
+
+    SELECT u.id, u.pseudo, u.parrain_id, c.generation + 1
+    FROM utilisateurs u
+    JOIN chaine_filleuls c ON u.parrain_id = c.id
+)
+SELECT pseudo, generation
+FROM chaine_filleuls
+ORDER BY generation, pseudo;
+```
+```
