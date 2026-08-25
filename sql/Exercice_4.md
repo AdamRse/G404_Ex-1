@@ -270,6 +270,11 @@ WHERE parrain_id IS NULL AND id NOT IN (
     FROM utilisateurs
     WHERE parrain_id IS NOT NULL
 );
+-- Sans NOT IN
+SELECT u.pseudo AS "Utilisateurs sans parrainage et non parrainé"
+FROM utilisateurs u
+LEFT JOIN utilisateurs p ON p.parrain_id = u.id
+WHERE u.parrain_id IS NULL AND p.id IS NULL;
 ```
 
 
@@ -331,4 +336,10 @@ WITH RECURSIVE filleuls_recursif AS (
 SELECT repeat('  ', level - 1) || pseudo AS utilisateur, level
 FROM filleuls_recursif
 ORDER BY level, pseudo;
+-- Sans récurcivité
+SELECT u1.pseudo, u2.pseudo AS "Filleul", u3.pseudo AS "Petit Filleul"
+FROM utilisateurs u1
+JOIN utilisateurs u2 ON u2.parrain_id = u1.id
+LEFT JOIN utilisateurs u3 ON u3.parrain_id = u2.id
+WHERE u1.pseudo = 'ShadowSlayer';
 ```
