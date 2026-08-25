@@ -96,21 +96,18 @@ INSERT INTO avis VALUES
 ```sql
 SELECT jeux.titre, avis.commentaire, avis.note
 FROM jeux
-LEFT JOIN avis
-ON jeux.id = avis.jeu_id;
+LEFT JOIN avis ON jeux.id = avis.jeu_id;
 ```
 
 ## Question 2 : Afficher le pseudo de chaque utilisateur qui possède au moins un jeu.
 ```sql
 SELECT DISTINCT utilisateurs.pseudo AS "Utilisateurs ayant 1 jeu ou +"
 FROM utilisateurs
-JOIN bibliotheques
-ON utilisateurs.id = bibliotheques.utilisateur_id;
+JOIN bibliotheques ON utilisateurs.id = bibliotheques.utilisateur_id;
 -- Ou
 SELECT utilisateurs.pseudo AS "Utilisateurs ayant 1 jeu ou +"
 FROM utilisateurs
-JOIN bibliotheques
-ON utilisateurs.id = bibliotheques.utilisateur_id
+JOIN bibliotheques ON utilisateurs.id = bibliotheques.utilisateur_id
 GROUP BY utilisateurs.pseudo;
 ```
 
@@ -118,8 +115,7 @@ GROUP BY utilisateurs.pseudo;
 ```sql
 SELECT jeux.titre AS "Jeux sans avis"
 FROM jeux
-LEFT JOIN avis
-ON jeux.id = avis.jeu_id
+LEFT JOIN avis ON jeux.id = avis.jeu_id
 WHERE avis.id IS NULL;
 ```
 
@@ -128,8 +124,7 @@ WHERE avis.id IS NULL;
 ```sql
 SELECT utilisateurs.pseudo AS "Utilisateurs sans jeu"
 FROM utilisateurs
-LEFT JOIN bibliotheques
-ON utilisateurs.id = bibliotheques.jeu_id
+LEFT JOIN bibliotheques ON utilisateurs.id = bibliotheques.jeu_id
 WHERE bibliotheques.id IS NULL;
 ```
 
@@ -138,8 +133,7 @@ WHERE bibliotheques.id IS NULL;
 ```sql
 SELECT jeux.titre, AVG(bibliotheques.heures_jouees) AS "Moyenne d'heures jouées"
 FROM jeux
-JOIN bibliotheques
-ON jeux.id = bibliotheques.jeu_id
+JOIN bibliotheques ON jeux.id = bibliotheques.jeu_id
 GROUP BY jeux.titre;
 ```
 
@@ -148,10 +142,8 @@ GROUP BY jeux.titre;
 ```sql
 SELECT utilisateurs.pseudo, jeux.titre AS "jeu possédé"
 FROM utilisateurs
-JOIN bibliotheques
-ON utilisateurs.id = bibliotheques.utilisateur_id
-JOIN jeux
-ON bibliotheques.jeu_id = jeux.id;
+JOIN bibliotheques ON utilisateurs.id = bibliotheques.utilisateur_id
+JOIN jeux ON bibliotheques.jeu_id = jeux.id;
 ```
 
 
@@ -159,110 +151,184 @@ ON bibliotheques.jeu_id = jeux.id;
 ```sql
 SELECT avis.commentaire, utilisateurs.pseudo, jeux.titre, avis.note
 FROM avis
-JOIN utilisateurs
-ON avis.utilisateur_id = utilisateurs.id
-JOIN jeux
-ON avis.jeu_id = jeux.id;
+JOIN utilisateurs ON avis.utilisateur_id = utilisateurs.id
+JOIN jeux ON avis.jeu_id = jeux.id;
 ```
 
 
 ## Question 8 : Afficher les pseudos, titres et heures jouées, triés par heures jouées décroissantes, limité aux 5 premiers.
 ```sql
-
+SELECT utilisateurs.pseudo, jeux.titre, bibliotheques.heures_jouees
+FROM utilisateurs
+JOIN bibliotheques ON utilisateurs.id = bibliotheques.utilisateur_id
+JOIN jeux ON bibliotheques.jeu_id = jeux.id
+ORDER BY bibliotheques.heures_jouees DESC
+LIMIT 5;
 ```
 
 
 ## Question 9 : Pour chaque utilisateur, afficher son pseudo et le nombre de jeux qu'il possède, trié du plus grand au plus petit.
 ```sql
-
+SELECT utilisateurs.pseudo, COUNT(bibliotheques.*) AS "Jeux possédés"
+FROM utilisateurs
+LEFT JOIN bibliotheques ON utilisateurs.id = bibliotheques.utilisateur_id
+GROUP BY utilisateurs.pseudo;
 ```
 
 
 ## Question 10 : Afficher les pseudos, titres de jeux et notes pour les avis dont la note est supérieure ou égale à 4, trié par note décroissante.
 ```sql
-
+SELECT utilisateurs.pseudo, jeux.titre, avis.note
+FROM avis
+JOIN utilisateurs ON utilisateurs.id = avis.utilisateur_id
+JOIN jeux ON jeux.id = avis.jeu_id
+WHERE avis.note >= 4;
 ```
 
 
 ## Question 11 : Afficher tous les utilisateurs et le titre des jeux qu'ils possèdent. Les utilisateurs sans jeu doivent apparaître aussi.
 ```sql
-
+SELECT utilisateurs.pseudo, jeux.titre
+FROM utilisateurs
+LEFT JOIN bibliotheques ON utilisateurs.id = bibliotheques.utilisateur_id
+LEFT JOIN jeux ON bibliotheques.jeu_id = jeux.id;
 ```
 
 
 ## Question 12 : Pour chaque utilisateur, afficher son pseudo et la moyenne de ses notes données. Les utilisateurs qui n'ont donné aucun avis doivent apparaître avec NULL.
 ```sql
-
+SELECT utilisateurs.pseudo, AVG(avis.note)
+FROM utilisateurs
+LEFT JOIN avis ON utilisateurs.id = avis.utilisateur_id
+GROUP BY utilisateurs.pseudo;
 ```
 
 
 ## Question 13 : Afficher tous les jeux et les pseudos des utilisateurs qui les possèdent. L'objectif est que tous les jeux apparaissent, même ceux qui ne sont dans aucune bibliothèque.
 ```sql
-
+SELECT jeux.titre, utilisateurs.pseudo
+FROM jeux
+LEFT JOIN bibliotheques ON bibliotheques.jeu_id = jeux.id
+LEFT JOIN utilisateurs ON utilisateurs.id = bibliotheques.utilisateur_id
+ORDER BY jeux.titre;
 ```
 
 
 ## Question 14 : Afficher tous les utilisateurs et tous les jeux, avec les heures jouées quand un utilisateur possède un jeu.
 ```sql
-
+SELECT jeux.titre, utilisateurs.pseudo, bibliotheques.heures_jouees
+FROM utilisateurs
+LEFT JOIN bibliotheques ON bibliotheques.utilisateur_id = utilisateurs.id
+FULL JOIN jeux ON bibliotheques.jeu_id = jeux.id
+ORDER BY jeux.titre, utilisateurs.pseudo;
 ```
 
 
 ## Question 15 : Trouver les utilisateurs sans jeu et les jeux sans propriétaire.
 ```sql
-
+SELECT utilisateurs.pseudo, jeux.titre
+FROM utilisateurs
+LEFT JOIN bibliotheques ON bibliotheques.utilisateur_id = utilisateurs.id
+FULL JOIN jeux ON bibliotheques.jeu_id = jeux.id
+WHERE jeux.id IS NULL OR utilisateurs.id IS NULL;
 ```
 
 
 ## Question 16 : Pour chaque jeu, afficher son titre et la note moyenne reçue. Tous les jeux doivent apparaître, même ceux sans note.
 ```sql
-
+SELECT jeux.titre, AVG(avis.note)
+FROM avis
+RIGHT JOIN jeux ON avis.jeu_id = jeux.id
+GROUP BY jeux.titre;
 ```
 
 
 ## Question 17 : Afficher le pseudo de chaque utilisateur et le pseudo de son parrain (celui qui l'a invité).
 ```sql
-
+SELECT u.pseudo AS utilisateur, p.pseudo AS parrain
+FROM utilisateurs u
+LEFT JOIN utilisateurs p ON u.parrain_id = p.id;
 ```
 
 
 ## Question 18 : Trouver les utilisateurs qui ont parrainé au moins 2 personnes, avec le nombre de filleuls.
 ```sql
-
+SELECT p.pseudo, COUNT(u.id) AS "Nombre de filleuls"
+FROM utilisateurs p
+JOIN utilisateurs u ON u.parrain_id = p.id
+GROUP BY p.pseudo
+HAVING COUNT(u.id) >= 2;
 ```
 
 
 ## Question 19 : Trouve les utilisateurs qui n'ont pas été parrainés et qui n'ont parrainé personne.
 ```sql
-
+SELECT pseudo
+FROM utilisateurs
+WHERE parrain_id IS NULL AND id NOT IN (
+    SELECT parrain_id
+    FROM utilisateurs
+    WHERE parrain_id IS NOT NULL
+);
 ```
 
 
 ## Question 20 : Générer toutes les combinaisons possibles entre les utilisateurs et les jeux. Afficher seulement les 10 premières lignes.
 ```sql
-
+SELECT utilisateurs.*, jeux.*
+FROM utilisateurs, jeux;
+-- Ou
+SELECT utilisateurs.*, jeux.*
+FROM utilisateurs
+CROSS JOIN jeux;
 ```
 
 
 ## Question 21 : Afficher le commentaire, le pseudo, le titre du jeu, la note donnée et les heures jouées pour chacun des avis.
 ```sql
-
+SELECT avis.commentaire, utilisateurs.pseudo, jeux.titre, avis.note, bibliotheques.heures_jouees
+FROM avis
+JOIN utilisateurs ON avis.utilisateur_id = utilisateurs.id
+JOIN jeux ON avis.jeu_id = jeux.id
+JOIN bibliotheques ON bibliotheques.utilisateur_id = utilisateurs.id AND jeux.id = bibliotheques.jeu_id;
 ```
 
 
 ## Question 22 : Afficher tous les utilisateurs, les jeux qu'ils possèdent (avec heures jouées), et les notes qu'ils ont donné. Inclure les utilisateurs sans jeu, les jeux sans avis, et les avis sans possession.
 ```sql
-
+SELECT utilisateurs.pseudo, jeux.titre, bibliotheques.heures_jouees, avis.note
+FROM utilisateurs
+LEFT JOIN bibliotheques ON bibliotheques.utilisateur_id = utilisateurs.id
+FULL JOIN jeux ON bibliotheques.jeu_id = jeux.id
+FULL JOIN avis ON utilisateurs.id = avis.utilisateur_id AND jeux.id = avis.jeu_id
+ORDER BY utilisateurs.pseudo, jeux.titre;
 ```
 
 
 ## Question 23 : Afficher les jeux du plus rentable au moins rentable en heures jouées moyennes par euro payé. Afficher le nom du jeu et le ratio demandé.
 ```sql
-
+SELECT jeux.titre, (SUM(bibliotheques.heures_jouees)/jeux.prix) AS "Ratio Heures Euro"
+FROM jeux
+JOIN bibliotheques ON bibliotheques.jeu_id = jeux.id
+GROUP BY jeux.titre, jeux.prix
+ORDER BY "Ratio Heures Euro" DESC;
 ```
 
 
 ## Question 24 : Afficher, pour l'utilisateur ShadowSlayer, toute la chaîne de générations de ses filleuls et leurs propres filleuls.
 ```sql
+WITH RECURSIVE filleuls_recursif AS (
+    SELECT id, pseudo, parrain_id, 1 AS level
+    FROM utilisateurs
+    WHERE pseudo = 'ShadowSlayer'
 
+    UNION
+
+    SELECT u.id, u.pseudo, u.parrain_id, f.level + 1
+    FROM utilisateurs u
+    JOIN filleuls_recursif f ON f.id = u.parrain_id
+)
+SELECT repeat('  ', level - 1) || pseudo AS utilisateur, level
+FROM filleuls_recursif
+ORDER BY level, pseudo;
 ```
