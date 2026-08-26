@@ -34,6 +34,7 @@ def cel1():
 
     # afficher le graphique
     plt.show()
+    plt.savefig('output.png|pdf|...')
 
 cel1()
 
