@@ -1,0 +1,43 @@
+DROP TABLE IF EXISTS coureurs;
+CREATE TABLE coureurs (
+id INTEGER PRIMARY KEY,
+nom_complet VARCHAR(60),
+ville VARCHAR(40),
+dossard VARCHAR(8),
+categorie VARCHAR(30),
+temps VARCHAR(8), -- format HH:MM:SS
+distance_km DECIMAL(4,1),
+classement INTEGER,
+a_fini BOOLEAN
+);
+INSERT INTO coureurs VALUES
+(1, 'Jean Dupont', ' Lyon', 'A101', 'Senior Homme', '01:32:45', 21.1, 1, TRUE),
+(2, 'Marie Petit', 'Roanne', 'A102', 'Senior Femme', '01:44:12', 21.1, 3, TRUE),
+(3, 'Paul Martin', 'Saint-Etienne','B105','Veteran Homme', '01:38:50', 21.1, 2, TRUE),
+(4, 'Julie Bernard', 'Villeurbanne','A104', 'Senior Femme', '01:51:30', 21.1, 5, TRUE),
+(5, 'Luc Robert', 'Lyon', 'C201', 'Junior Homme', '01:47:15', 21.1, 4, TRUE),
+(6, 'Emma Faure', 'Clermont', 'B310', 'Senior Femme', '02:03:40', 21.1, 8, TRUE),
+(7, 'Hugo Girard', 'Paris', 'E450', 'Veteran Homme', '02:22:15', 21.1, 12, FALSE),
+(8, 'Léa Morel', 'Lyon', 'B311', 'Senior Femme', '01:59:05', 21.1, 6, TRUE),
+(9, 'Adam Lefèvre', ' Marseille', 'F600', 'Senior Homme', '03:10:22', 21.1, 15, FALSE),
+(10, 'Chloé Rousseau', 'Lyon', 'D322', 'Veteran Femme', '02:01:48', 21.1, 7, TRUE),
+(11, 'Tom Roussel', 'Grenoble', 'E777', 'Senior Homme', '02:30:11', 21.1, 13, TRUE),
+(12, 'Sarah Lambert', 'Annecy', 'A108', 'Senior Femme', '01:53:02', 21.1, NULL, TRUE),
+(13, 'Louis Perrin', 'Lyon', 'G998', 'Veteran Homme', '02:44:33', 21.1, 14, FALSE),
+(14, 'Alice Blanc', 'Lyon', 'B203', 'Senior Femme', '02:03:55', 21.1, 9, TRUE),
+(15, 'Gabriel Michel', 'Toulouse', 'H654', 'Senior Homme', '03:22:47', 21.1, 16, FALSE),
+(16, 'Zoé Guerin', 'Nantes', 'A145', 'Junior Femme', '02:07:19', 21.1, 10, TRUE),
+(17, 'Victor Chevalier', 'Lyon', 'D012', 'Veteran Homme', '02:35:50', 21.1, NULL, FALSE),
+(18, 'Manon Test', 'Dijon', 'R120', 'Senior Femme', '02:55:00', 21.1, NULL, FALSE),
+(19, 'Alexis Marchand', 'Amiens', 'C301', 'Senior Homme', '02:22:58', 21.1, 11, TRUE),
+(20, 'Eva Fournier', 'Lyon', 'B777', 'Veteran Femme', '02:58:30', 21.1, NULL, FALSE),
+(21, 'Lucas Renard', 'Toulouse', 'F555', 'Senior Homme', '03:15:22', 21.1, NULL, FALSE),
+(22, 'Inès Lambert', 'Lyon', 'A200', 'Junior Femme', '02:12:45', 21.1, NULL, TRUE),
+(23, 'Rayan Moreau', 'Lille', 'E888', 'Senior Homme', '02:49:12', 21.1, NULL, TRUE),
+(24, 'Camille Noel', 'Lyon', 'B909', 'Senior Femme', '02:41:30', 21.1, NULL, TRUE),
+(25, 'Antoine Vasseur', 'Brest', 'G700', 'Veteran Homme', '03:22:00', 21.1, NULL, FALSE),
+(26, 'Nina Leclerc', 'Lyon', 'D340', 'Junior Femme', '02:47:15', 21.1, NULL, TRUE),
+(27, 'Julien Aubert', 'Nice', 'A111', 'Senior Homme', '03:00:01', 21.1, NULL, FALSE),
+(28, 'Sarah Colin', 'Lyon', 'C777', 'Senior Femme', '02:52:33', 21.1, NULL, TRUE),
+(29, 'Théo Barbier', 'Reims', 'F222', 'Senior Homme', '03:28:44', 21.1, NULL, FALSE),
+(30, 'Lily Gauthier', 'Lyon', 'A309', 'Junior Femme', '02:36:09', 21.1, NULL, TRUE);
