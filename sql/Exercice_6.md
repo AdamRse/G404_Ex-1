@@ -3,12 +3,16 @@
 
 ## Question 1 : Afficher pour chaque inscription en cours le nombre de jours écoulés depuis la date d'inscription.
 ```sql
-
+SELECT EXTRACT(DAY FROM (NOW() - date_inscription)) AS "Jours écoulés"
+FROM inscriptions
+WHERE statut = 'en cours';
 ```
 
 ## Question 2 : Lister les ateliers prévus dans le futur.
 ```sql
-
+SELECT *
+FROM ateliers
+WHERE NOW() < date_atelier;
 ```
 
 ## Question 3 : Afficher l'âge de chaque apprenant en années (indice : utiliser la fonction AGE()).
