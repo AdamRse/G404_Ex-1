@@ -89,7 +89,7 @@ SELECT * FROM <table2> [WHERE ...]
 - Exporter une table, structure + données :  
 `docker exec -e PGPASSWORD=<mot de passe> -t <nom conteneur> pg_dump -U admin -d <nom base de données> -t <nom table> --no-owner --no-privileges > <nom fichier output>.sql`
 ### A executer dans ce répertoire
-Executer une commande SQL
+Connexion à la base de données
 	`docker exec -it postgres-local psql -U admin -d <base de données>`
 Executer un script
 	`docker exec -i postgres-local psql -U admin -d <base de données> < <script.sql>`
