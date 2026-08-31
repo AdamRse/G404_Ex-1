@@ -1,6 +1,8 @@
 # Exercice 6
 ## Connexion à la base de donnéees :
-`docker exec -it postgres-local psql -U admin -d testdb`
+```bash
+docker exec -it postgres-local psql -U admin -d testdb
+```
 ## Répondez aux questions suivantes
 ### Question 1 : Afficher pour chaque inscription en cours le nombre de jours écoulés depuis la date d'inscription.
 ```sql
@@ -121,6 +123,19 @@ FROM apprenants a
 JOIN inscriptions i ON a.id = i.apprenant_id
 JOIN formations f ON i.formation_id = f.id
 WHERE f.prix > 9000;
+-- Ou
+SELECT a.*
+FROM apprenants a
+WHERE a.id IN (
+    SELECT i.apprenant_id
+    FROM inscriptions i
+    WHERE i.formation_id IN (
+        SELECT f.id
+        FROM formations f
+        WHERE f.prix > 9000
+    )
+)
+ORDER BY a.id;
 ```
 
 ### Question 14 : Afficher les apprenants ayant eu au moins une évaluation.
