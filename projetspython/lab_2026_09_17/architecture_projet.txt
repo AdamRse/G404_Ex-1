@@ -1,0 +1,29 @@
+(.venv) adam@adesk:~/dev/projets/exercice-python$ tree
+.
+├── main.py
+├── projetspython
+│   └── lab_2026_09_17
+│       ├── architecture_projet.txt
+│       ├── data
+│       │   └── raw
+│       │       └── tickets_support.csv
+│       ├── instructions.txt
+│       ├── main.py
+│       ├── pipeline_template
+│       │   ├── 01_auditer.py
+│       │   ├── 02_preparer.py
+│       │   ├── 03_decrire.py
+│       │   ├── 04_visualiser.py
+│       │   ├── 05_mesurer_frequences.py
+│       │   ├── chemins_projet.py
+│       │   ├── executer_pipeline.py
+│       │   └── README.md
+│       ├── PROJECT_BRIEF.md
+│       ├── PROJECT_BRIEF.md.docx
+│       ├── PYTHON_SNIPPETS.md
+│       ├── PYTHON_SNIPPETS.md.docx
+│       ├── REPORT_TEMPLATE.md
+│       └── REPORT_TEMPLATE.md.docx
+├── requirements.txt
+├── start.sh
+└── tests.py
