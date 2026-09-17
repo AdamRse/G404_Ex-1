@@ -9,19 +9,30 @@ from chemins_projet import (
     creer_dossiers_sortie,
 )
 
+COLONNES_FREQUENCES = ["channel", "seuil_minutes", "nombre_queue",
+                       "effectif_groupe", "frequence_queue"]
+
 
 def calculer_frequences_queue(tickets_nettoyes):
-    """Renvoyer une ligne par canal au seuil SEUIL_QUEUE_MINUTES.
+    """Une ligne par canal : proportion de tickets à 180 minutes ou plus.
 
-    Colonnes : channel, seuil_minutes, nombre_queue,
-    effectif_groupe, frequence_queue.
-
-    À FAIRE : compter les tickets à 180 minutes ou plus dans un canal, puis
-    diviser par l'effectif analysable de ce même canal. Répéter par canal.
-    frequence_queue est une proportion entre 0 et 1.
-    Aide : section 9 de ../PYTHON_SNIPPETS.md.
+    frequence_queue = nombre_queue / effectif_groupe, dans CE canal
+    (jamais l'effectif du fichier entier).
     """
-    raise NotImplementedError("À FAIRE : calculer les fréquences par canal.")
+    lignes = []
+    for canal in sorted(tickets_nettoyes["channel"].unique()):
+        durees = tickets_nettoyes.loc[tickets_nettoyes["channel"] == canal,
+                                      "resolution_minutes"]
+        effectif_groupe = int(durees.count())
+        nombre_queue = int((durees >= SEUIL_QUEUE_MINUTES).sum())
+        lignes.append({
+            "channel": canal,
+            "seuil_minutes": SEUIL_QUEUE_MINUTES,
+            "nombre_queue": nombre_queue,
+            "effectif_groupe": effectif_groupe,
+            "frequence_queue": nombre_queue / effectif_groupe,
+        })
+    return pd.DataFrame(lignes, columns=COLONNES_FREQUENCES)
 
 
 def main():
@@ -30,8 +41,14 @@ def main():
 
     creer_dossiers_sortie()
     frequences.to_csv(CSV_FREQUENCES, index=False)
+
+    # Contrôles demandés par le README.
+    assert (frequences["nombre_queue"] <= frequences["effectif_groupe"]).all()
+    assert frequences["frequence_queue"].between(0, 1).all()
+    assert int(frequences["effectif_groupe"].sum()) == len(tickets_nettoyes)
+
     print(f"Seuil : {SEUIL_QUEUE_MINUTES} minutes")
-    print(frequences.to_string(index=False))
+    print(frequences.round(4).to_string(index=False))
     print(f"Sortie : {CSV_FREQUENCES}")
     print("Contrôle : vérifier le numérateur et le dénominateur de chaque ligne.")
 

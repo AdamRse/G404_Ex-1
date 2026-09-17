@@ -3,7 +3,7 @@
 from pathlib import Path
 
 RACINE_PIPELINE = Path(__file__).resolve().parent
-RACINE_LAB = RACINE_PIPELINE.parent
+RACINE_LAB = RACINE_PIPELINE
 
 CSV_BRUT = RACINE_LAB / "data" / "raw" / "tickets_support.csv"
 CSV_NETTOYE = RACINE_LAB / "data" / "processed" / "tickets_support_nettoyes.csv"
