@@ -5,7 +5,7 @@ SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 IDE_PROCESS_NAME="zed-editor"
 
 cd "${SCRIPT_DIR}" || exit 1
-if ! pgrep -x "${IDE_PROCESS_NAME}"; then
+if [ -n "${2}" ] && [[ "${2}" == "zed" ]] && ! pgrep -x "${IDE_PROCESS_NAME}"; then
     zed .
 fi
 source .venv/bin/activate
