@@ -1,0 +1,45 @@
+/home/adam/dev/projets/exercice-python/
+├── main.py
+├── projetspython
+│   └── lab_2026_09_17
+│       ├── 01_auditer.py
+│       ├── 02_preparer.py
+│       ├── 03_decrire.py
+│       ├── 04_visualiser.py
+│       ├── 05_mesurer_frequences.py
+│       ├── architecture_projet.txt
+│       ├── chemins_projet.py
+│       ├── data
+│       │   ├── processed
+│       │   │   └── tickets_support_nettoyes.csv
+│       │   └── raw
+│       │       └── tickets_support.csv
+│       ├── executer_pipeline.py
+│       ├── instructions.txt
+│       ├── main.py
+│       ├── outputs
+│       │   ├── audit_structure.csv
+│       │   ├── boite_temps_resolution.html
+│       │   ├── distributions_temps_resolution.html
+│       │   ├── frequences_empiriques_180_minutes.csv
+│       │   ├── journal_decisions_qualite.csv
+│       │   └── resume_par_groupe.csv
+│       ├── pipeline_template
+│       │   ├── executer_pipeline.py
+│       │   ├── example_template
+│       │   │   ├── 01_auditer.py
+│       │   │   ├── 02_preparer.py
+│       │   │   ├── 03_decrire.py
+│       │   │   ├── 04_visualiser.py
+│       │   │   └── 05_mesurer_frequences.py
+│       │   └── README.md
+│       ├── PROJECT_BRIEF.md
+│       ├── PROJECT_BRIEF.md.docx
+│       ├── PYTHON_SNIPPETS.md
+│       ├── PYTHON_SNIPPETS.md.docx
+│       ├── REPORT_TEMPLATE.md
+│       └── REPORT_TEMPLATE.md.docx
+├── requirements.txt
+├── start.sh
+├── tests.py
+└── tree.txt
