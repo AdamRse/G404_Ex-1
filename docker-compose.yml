@@ -1,0 +1,22 @@
+# Orchestration du pipeline d'analyse des tickets support.
+# Aucun Python n'est requis sur la machine hôte : tout s'exécute dans le conteneur.
+#
+# Utilisation :
+#   ./main.py                              # raccourci (script polyglotte shell/Python)
+#   docker compose run --rm pipeline       # commande explicite équivalente
+#   docker compose build                   # reconstruire l'image (ex. après modification de requirements.txt)
+
+services:
+  pipeline:
+    build: .
+    image: pipeline-tickets-support:local
+    working_dir: /app
+    # Les fichiers produits (outputs/, data/processed/) restent accessibles à
+    # l'utilisateur de la machine hôte au lieu d'appartenir à root.
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"   # ne pas polluer le projet de fichiers .pyc
+      PYTHONUNBUFFERED: "1"          # logs en temps réel
+    volumes:
+      - .:/app                       # code + données brutes + sorties partagés
+    command: ["python", "main.py"]
