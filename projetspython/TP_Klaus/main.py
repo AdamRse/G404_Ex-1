@@ -16,5 +16,4 @@ def executer_script(filename=False):
     )
 
 def main():
-    print(SCRIPT_DIR)
     executer_script(SCRIPTS[0])
