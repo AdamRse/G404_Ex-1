@@ -5,6 +5,7 @@ import sys
 SCRIPT_DIR = str(Path(__file__).resolve().parent)+"/scripts"
 SCRIPTS = [
     "01_analyse.py"
+    , "02_recherche.py"
 ]
 
 def executer_script(filename=False):

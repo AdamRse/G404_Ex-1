@@ -8,6 +8,7 @@ import re
 
 SCRIPT_DIR = str(Path(__file__).resolve().parent)
 OUTPUT_DIR = f"{SCRIPT_DIR}/../outputs"
+OUTPUT_FILE_NAME = f"rapport_analyse.txt"
 DATA_FILES_DIR = str(Path(__file__).resolve().parent)+"/../data"
 DATA_FILES = [f.name for f in os.scandir(DATA_FILES_DIR) if f.is_file()]
 SEUIL_VALEURS_UNIQUES = 30
@@ -16,9 +17,8 @@ sp="\n"+("-"*50)+"\n"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def main():
-    output_file = f"{OUTPUT_DIR}/rapport_analyse.txt"
     # Ouverture en mode "w" : écrase le fichier s'il existe
-    with open(output_file, "w", encoding="utf-8") as f:
+    with open(f"{OUTPUT_DIR}/{OUTPUT_FILE_NAME}", "w", encoding="utf-8") as f:
         for file in DATA_FILES:
             analyze_csv_file(DATA_FILES_DIR+"/"+file, f)
 
