@@ -8,7 +8,7 @@ import re
 
 SCRIPT_DIR = str(Path(__file__).resolve().parent)
 OUTPUT_DIR = f"{SCRIPT_DIR}/../outputs"
-OUTPUT_FILE_NAME = "analyse"
+OUTPUT_FILE_NAME = "recherche.txt"
 DATA_FILES_DIR = str(Path(__file__).resolve().parent)+"/../data"
 DATA_FILES = [f.name for f in os.scandir(DATA_FILES_DIR) if f.is_file()]
 OUTPUT_FILE = f"{OUTPUT_DIR}/recherche.txt"
@@ -21,4 +21,12 @@ def main():
     # Ouverture en mode "w" : écrase le fichier s'il existe
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         for file in DATA_FILES:
-            analyze_csv_file(DATA_FILES_DIR+"/"+file, f)
+            finding_csv_file(DATA_FILES_DIR+"/"+file, f)
+
+def finding(path, f):
+    # Recherche de pattern divergents
+    col_exceptions = [
+        ["ID_Operation", r"OP-[0-9]{7}"]
+    ]
+    print("TEST DES PATTERNS\n")
+    print(test_exceptions(df, col_exceptions).to_string(index=False), end=sp)

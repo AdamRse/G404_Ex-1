@@ -12,9 +12,82 @@ OUTPUT_FILE_NAME = f"rapport_analyse.txt"
 DATA_FILES_DIR = str(Path(__file__).resolve().parent)+"/../data"
 DATA_FILES = [f.name for f in os.scandir(DATA_FILES_DIR) if f.is_file()]
 SEUIL_VALEURS_UNIQUES = 30
+SEUIL_TAILLES_UNIQUES = 8
 
 sp="\n"+("-"*50)+"\n"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+
+def show_unique_length(df: pd.DataFrame, seuil: int = SEUIL_TAILLES_UNIQUES) -> pd.DataFrame:
+    """
+    Pour chaque colonne de type string ayant au plus `seuil` longueurs
+    de chaînes différentes, retourne un tableau où :
+      - l'index  = nom de la colonne
+      - colonne 'nb tailles'          = nombre de longueurs distinctes
+      - colonnes 'taille 1', 'taille 2', ... = la PREMIÈRE valeur
+        rencontrée pour chaque longueur, triée par longueur croissante
+
+    Les colonnes avec plus de `seuil` longueurs différentes sont ignorées,
+    de même que les colonnes non-string (numériques, booléennes...).
+    """
+    result = {}
+    for col in df.columns:
+        serie = df[col].dropna()
+
+        # Ne garder que les colonnes 100% string
+        if serie.empty or not serie.map(lambda x: isinstance(x, str)).all():
+            continue
+
+        longueurs = serie.str.len()
+        nb_tailles = longueurs.nunique()
+        if nb_tailles > seuil:
+            continue
+
+        # Première valeur de chaque groupe de longueur, triée par longueur
+        exemples = (serie.to_frame("valeur")
+                         .assign(longueur=longueurs)
+                         .groupby("longueur")["valeur"]
+                         .first()
+                         .sort_index())
+
+        result[col] = [nb_tailles] + [trunc_any(v) for v in exemples.tolist()]
+
+    if not result:
+        return pd.DataFrame({f"Aucune colonne string avec moins de {seuil} tailles uniques.\n"})
+
+    nb_max = max(len(v) for v in result.values())
+    entetes = ["nb tailles"] + [f"taille {i}" for i in range(1, nb_max)]
+    for v in result.values():
+        v.extend([""] * (nb_max - len(v)))
+
+    return pd.DataFrame(result, index=entetes).T
+
+def initialiser_recherche_exception_json():
+    """
+    Crée 'recherche_exception.json' à la racine du projet, pré-rempli avec :
+      - les noms des scripts (clés, depuis SCRIPTS)
+      - les noms des .csv présents dans ../data (récupérés dynamiquement)
+    Si le fichier existe déjà, il n'est PAS écrasé.
+    """
+    chemin_json=f"{SCRIPT_DIR}/../recherche_exception.json"
+    scripts=DATA_FILES
+    if chemin_json.exists():
+        print(f"[INFO] '{chemin_json}' existe déjà → aucune modification.")
+        return
+
+    # Noms des fichiers de données, récupérés dynamiquement (comme dans 01_analyse.py)
+    data_files = sorted(f.name for f in DATA_DIR.iterdir() if f.is_file())
+
+    contenu = {
+        script: {csv: {} for csv in data_files}
+        for script in scripts
+    }
+
+    with open(chemin_json, "w", encoding="utf-8") as f:
+        json.dump(contenu, f, indent=2, ensure_ascii=False)
+
+    print(f"[OK] '{chemin_json.name}' créé : "
+          f"{len(scripts)} script(s), {len(data_files)} fichier(s) de données.")
 
 def main():
     # Ouverture en mode "w" : écrase le fichier s'il existe
@@ -116,12 +189,12 @@ def analyze_csv_file(filePath:str, output_f=None, separator:str=";"):
         uniques = lister_valeurs_uniques(df, SEUIL_VALEURS_UNIQUES).to_string(index=False)
         print(uniques, end=sp)
 
-        # Recherche de pattern divergents
-        col_exceptions = [
-            ["ID_Operation", r"OP-[0-9]{7}"]
-        ]
-        print("TEST DES PATTERNS\n")
-        print(test_exceptions(df, col_exceptions).to_string(index=False), end=sp)
+        # Recherche des tailles uniques
+        unique_str = show_unique_length(df)
+        print(f"TAILLES DES CELLULES (seuil : {SEUIL_TAILLES_UNIQUES}\n")
+        print(unique_str, end=sp)
+
+
 
     content = buffer.getvalue()
 
